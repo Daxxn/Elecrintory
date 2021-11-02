@@ -1,0 +1,11 @@
+.base-tag-list {
+   
+}
+
+.tag-item {
+   all: unset;
+}
+
+.tag-item:hover {
+   background-color: var(--background-hover-color);
+}

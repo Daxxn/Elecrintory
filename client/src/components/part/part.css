@@ -1,7 +1,14 @@
 .base-part {
-   display: block;
+   display: grid;
    border: var(--border-color) solid 4px;
    padding: 0.5rem 2rem;
+   grid-template-areas: 
+      "name man ord inv ds"
+      "desc desc desc desc ds"
+      "tag tag pack pack pack";
+
+   grid-template-columns: repeat(5, 1fr);
+   grid-template-rows: repeat(3, 1fr);
 }
 
 .item-element {
@@ -9,4 +16,36 @@
    flex-flow: row nowrap;
    padding: 0;
    margin: 0.1rem;
+}
+
+.name {
+   grid-area: name;
+}
+
+.manuf {
+   grid-area: man;
+}
+
+.ordered {
+   grid-area: ord;
+}
+
+.inventory {
+   grid-area: inv;
+}
+
+.desc {
+   grid-area: desc;
+}
+
+.tag {
+   grid-area: tag;
+}
+
+.pack {
+   grid-area: pack;
+}
+
+.datasheet {
+   grid-area: ds;
 }

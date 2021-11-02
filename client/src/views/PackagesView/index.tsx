@@ -2,10 +2,16 @@ import React, { useState } from 'react';
 import Package from '../../components/Package';
 import { PackageModel } from '../../data/models/DataModels';
 import ModelObserver from '../../data/models/ModelObserver';
+import { StatusResult } from '../../data/utils/urlHelper';
 import './PackagesView.css';
 import SelectedPackageView from './SelectedPackageView';
 
-const PackagesView = (): JSX.Element => {
+interface PackagesViewProps {
+   messageCallback: (message: string, status: StatusResult) => void;
+}
+
+const PackagesView = (props: PackagesViewProps): JSX.Element => {
+   const { messageCallback } = props;
    const packages = ModelObserver.getPackageCollection();
    const [selectedPackage, setSelectedPackage] = useState<PackageModel | null>(null);
 
@@ -53,6 +59,18 @@ const PackagesView = (): JSX.Element => {
       if (selectedPack) {
          setSelectedPackage(selectedPack);
       }
+   };
+
+   const handleCreatePackage = async (pack: PackageModel) => {
+      messageCallback('Created new Package', await ModelObserver.addPackage(pack));
+   };
+
+   const handleSavePackage = async (pack: PackageModel) => {
+      messageCallback('Created new Package', await ModelObserver.updatePackage(pack));
+   }
+
+   const handleClearPackage = () => {
+      setSelectedPackage(null);
    }
    
    return (
@@ -80,6 +98,10 @@ const PackagesView = (): JSX.Element => {
                handleIDChange={handleIDChange}
                handleLeadChange={handleLeadsChange}
                handleDescChange={handleDescChange}
+
+               handleCreatePackage={handleCreatePackage}
+               handleSavePackage={handleSavePackage}
+               handleClearPackage={handleClearPackage}
             />
          </div>
       </div>

@@ -7,6 +7,8 @@
 .selected-package-container {
    background-color: var(--select-item-color);
    padding: 0.5rem;
+   position: sticky;
+   bottom: 0;
 }
 
 .package-list-container {

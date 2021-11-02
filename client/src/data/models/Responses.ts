@@ -1,6 +1,18 @@
-import PartModel, { PackageCollection, PartCollection } from "./DataModels";
+import PartModel, { PackageCollection, PackageModel, PartCollection } from "./DataModels";
 import UserModel from "./UserModel";
 
+// #region GENERAL
+export type MessageResponse = {
+   message: string;
+}
+
+export type DeletedResponse = {
+   user: UserModel;
+   id: string;
+}
+// #endregion
+
+// #region USER
 export type UserDataResponse = {
    user: UserModel;
    parts: PartCollection;
@@ -19,16 +31,9 @@ export type RegisterResponse = {
 export type UserUpdateResponse = {
    user: UserModel;
 }
+// #endregion
 
-export type MessageResponse = {
-   message: string;
-}
-
-export type DeletedPartResponse = {
-   user: UserModel;
-   partId: string;
-}
-
+// #region PART
 export type UpdatedPartResponse = {
    part: PartModel;
 }
@@ -37,3 +42,15 @@ export type NewPartResponse = {
    user: UserModel;
    parts: PartCollection;
 }
+// #endregion
+
+// #region PACKAGES
+export type NewPackageResponse = {
+   user: UserModel;
+   packages: PackageCollection;
+}
+
+export type UpdatedPackageResponse = {
+   package: PackageModel;
+}
+// #endregion

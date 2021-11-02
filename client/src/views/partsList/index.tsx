@@ -2,14 +2,17 @@ import React from 'react';
 import AddPartButton from '../../components/AddPart';
 import Part from '../../components/part';
 import ModelObserver from '../../data/models/ModelObserver';
+import { StatusResult } from '../../data/utils/urlHelper';
 import './partsList.css';
 
 export interface PartsListProps {
    parts: string[];
+   messageCallback: (message: string, status: StatusResult) => void;
+   handleSelectTag: (tag: string) => void;
 }
 
 const PartsList = (props: PartsListProps): JSX.Element => {
-   const { parts } = props;
+   const { parts, handleSelectTag } = props;
    const userLoggedIn = ModelObserver.getUser() != null;
 
    const handleAddPart = (partName: string) => {
@@ -20,7 +23,7 @@ const PartsList = (props: PartsListProps): JSX.Element => {
       <div className="base-parts-list">
          <AddPartButton handleAddPart={handleAddPart} />
          {parts.map(p => (
-            <Part key={`part-element-${p}`} partId={p} />
+            <Part key={`part-element-${p}`} partId={p} handleSelectTag={handleSelectTag} />
          ))}
       </div>
    ) : (

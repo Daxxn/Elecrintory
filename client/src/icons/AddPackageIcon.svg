@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="32"
+   height="32"
+   viewBox="0 0 8.4666667 8.4666667"
+   version="1.1"
+   id="svg5"
+   xmlns="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2" />
+  <g
+     id="main">
+    <rect
+       style="fill:#141414;stroke-width:0;"
+       id="center-pad"
+       width="4.2333336"
+       height="8.4666662"
+       x="2.1166666"
+       y="-8.8817842e-16"
+       ry="0.35277787" />
+    <rect
+       style="fill:#141414;fill-opacity:1;stroke-width:0;"
+       id="pad-1"
+       width="1.3229166"
+       height="1.3229166"
+       x="0"
+       y="-2.220446e-16"
+       ry="0.26458332" />
+    <rect
+       style="fill:#141414;fill-opacity:0.996136;stroke-width:0;"
+       id="pad-2"
+       width="1.3229166"
+       height="1.3229166"
+       x="3.9736431e-08"
+       y="3.5718751"
+       ry="0.26458332" />
+    <rect
+       style="fill:#141414;fill-opacity:0.996136;stroke-width:0;"
+       id="pad-3"
+       width="1.3229166"
+       height="1.3229166"
+       x="1.9595436e-15"
+       y="7.1437502"
+       ry="0.26458332" />
+    <rect
+       style="fill:#141414;fill-opacity:0.996136;stroke-width:0;"
+       id="pad-6"
+       width="1.3229166"
+       height="1.3229166"
+       x="7.1437497"
+       y="-2.220446e-16"
+       ry="0.26458332" />
+    <rect
+       style="fill:#141414;fill-opacity:0.996136;stroke-width:0;"
+       id="pad-5"
+       width="1.3229166"
+       height="1.3229166"
+       x="7.1437497"
+       y="3.5718751"
+       ry="0.26458332" />
+    <rect
+       style="fill:#141414;fill-opacity:0.996136;stroke-width:0.25;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.75189"
+       id="pad-4"
+       width="1.3229166"
+       height="1.3229166"
+       x="7.1437502"
+       y="7.1437502"
+       ry="0.26458332" />
+    <path
+       style="fill:#828282;"
+       d="M 0.92604173,3.5718751 H 3.5718749 V 0.92604171 H 4.8947916 V 3.5718751 H 7.5406249 V 4.8947917 H 4.8947916 V 7.540625 H 3.5718749 V 4.8947917 H 0.92604173 Z"
+       id="plus" />
+  </g>
+</svg>

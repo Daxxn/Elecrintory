@@ -1,7 +1,7 @@
 import PartModel, { PackageCollection, PackageModel, PartCollection } from "./DataModels";
 import UserModel, { Creds } from "./UserModel";
 import URLHelper, { StatusResult } from '../utils/urlHelper';
-import { LoginResponse, MessageResponse, NewPartResponse, RegisterResponse, UserDataResponse } from './Responses';
+import { LoginResponse, MessageResponse, NewPackageResponse, NewPartResponse, RegisterResponse, UpdatedPackageResponse, UpdatedPartResponse, UserDataResponse } from './Responses';
 import Cookies from 'js-cookie';
 
 type UserCallback = (user: UserModel | null) => void;
@@ -92,11 +92,13 @@ class ModelObserver {
 
    static setPackage(packageItem: PackageModel) {
       this.packages[packageItem._id] = packageItem;
+      this.updatePackage(packageItem);
       this.updatePackageObservers(packageItem);
    }
    // #endregion
 
    // #region Server Call Methods
+   // #region Update Methods
    private static async updateUser() {
       try {
          const req = URLHelper.buildDataFetch('user', 'PATCH', undefined, this.user);
@@ -110,6 +112,41 @@ class ModelObserver {
          console.log(err);
       }
    }
+
+   static async updatePackage(pack: PackageModel): Promise<StatusResult> {
+      console.log('Send Package PATCH request...\n', pack);
+      try {
+         const req = URLHelper.buildDataFetch('packages', 'PATCH', '', pack);
+         const res = await fetch(req.url, req.config);
+         if (URLHelper.quickStatusCheck(res.status)) {
+            const data = (await res.json()) as UpdatedPackageResponse;
+            this.packages[data.package._id] = data.package;
+            this.updatePackageObservers(data.package);
+         }
+         return URLHelper.statusCheck(res.status);
+      } catch (err) {
+         console.log(err);
+         return 'error';
+      }
+   }
+
+   static async updatePart(part: PartModel): Promise<StatusResult> {
+      console.log('Send Package PART request...\n', part);
+      try {
+         const req = URLHelper.buildDataFetch('parts', 'PATCH', '', part);
+         const res = await fetch(req.url, req.config);
+         if (URLHelper.quickStatusCheck(res.status)) {
+            const data = (await res.json()) as UpdatedPartResponse;
+            this.parts[data.part._id] = data.part;
+            this.updatePartObservers(data.part);
+         }
+         return URLHelper.statusCheck(res.status);
+      } catch (err) {
+         console.log(err);
+         return 'error';
+      }
+   }
+   // #endregion
 
    private static async fetchUserData(): Promise<StatusResult> {
       try {
@@ -153,6 +190,25 @@ class ModelObserver {
                }
             })
             .catch(err => console.log(err));
+      }
+   }
+
+   static async addPackage(pack: PackageModel): Promise<StatusResult> {
+      console.log('Create package and send to server...');
+      try {
+         const req = URLHelper.buildDataFetch('packages', 'POST', '', pack);
+         const res = await fetch(req.url, req.config);
+         if (URLHelper.quickStatusCheck(res.status)) {
+            const data = (await res.json()) as NewPackageResponse;
+            if (data) {
+               this.user = data.user;
+               this.packages = data.packages;
+               this.updateUserObservers(data.user);
+            }
+         }
+         return URLHelper.statusCheck(res.status);
+      } catch (err) {
+         return 'error';
       }
    }
 
