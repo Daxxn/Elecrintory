@@ -1,0 +1,22 @@
+.base-tag-list {
+   display: flex;
+   flex-flow: column nowrap;
+   align-content: stretch;
+   justify-content: space-evenly;
+   align-items: center;
+   background-color: transparent;
+}
+
+.tag-item {
+   all: unset;
+   justify-self: stretch;
+   align-self: stretch;
+   text-align: center;
+   background-color: var(--background-modal-color);
+
+   margin: 0.2rem;
+}
+
+.tag-item:hover {
+   background-color: var(--background-hover-color);
+}

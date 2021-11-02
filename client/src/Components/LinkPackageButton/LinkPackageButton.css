@@ -1,0 +1,66 @@
+.base-link-button {
+   padding: 0.1rem;
+}
+
+#center-pad {
+   opacity: 0.25;
+   transition: opacity 300ms ease-out;
+}
+
+#pad-1 {
+   opacity: 0.25;
+   transition: opacity 300ms ease-out;
+}
+
+#pad-2 {
+   opacity: 0.25;
+   transition: opacity 300ms ease-out;
+}
+
+#pad-3 {
+   opacity: 0.25;
+   transition: opacity 300ms ease-out;
+}
+
+#pad-4 {
+   opacity: 0.25;
+   transition: opacity 300ms ease-out;
+}
+
+#pad-5 {
+   opacity: 0.25;
+   transition: opacity 300ms ease-out;
+}
+
+#pad-6 {
+   opacity: 0.25;
+   transition: opacity 300ms ease-out;
+}
+
+.base-link-button:hover #center-pad {
+   opacity: 1;
+}
+
+.base-link-button:hover #pad-1 {
+   opacity: 1;
+}
+
+.base-link-button:hover #pad-2 {
+   opacity: 1;
+}
+
+.base-link-button:hover #pad-3 {
+   opacity: 1;
+}
+
+.base-link-button:hover #pad-4 {
+   opacity: 1;
+}
+
+.base-link-button:hover #pad-5 {
+   opacity: 1;
+}
+
+.base-link-button:hover #pad-6 {
+   opacity: 1;
+}

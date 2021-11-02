@@ -1,0 +1,21 @@
+.add-package-button {
+   padding: 0.1rem;
+}
+
+#plus {
+   opacity: 0;
+   transition: opacity 300ms ease-out;
+}
+
+#center-pad {
+   opacity: 1;
+   transition: opacity 300ms ease-out;
+}
+
+.add-package-button:hover #plus {
+   opacity: 1;
+}
+
+.add-package-button:hover #center-pad {
+   opacity: 0;
+}

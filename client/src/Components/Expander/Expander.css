@@ -1,0 +1,9 @@
+.base-expander {
+   display: flex;
+   flex-flow: column nowrap;
+   background-color: var(--background-expander-color);
+}
+
+.open {
+   background-color: var(--background-modal-color);
+}

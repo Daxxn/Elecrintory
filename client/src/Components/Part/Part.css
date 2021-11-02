@@ -1,0 +1,73 @@
+.base-part {
+   display: grid;
+   border: var(--border-color) solid 4px;
+   padding: 0.5rem 2rem;
+   grid-template-areas: 
+      "name man ord inv ds"
+      "desc desc desc desc ds"
+      "tag tag pack pack pack";
+
+   grid-template-columns: 2fr 2fr 2fr 2fr 1fr;
+   grid-template-rows: 4rem 6rem 1fr;
+}
+
+.part-item-container {
+   display: flex;
+   flex-flow: row nowrap;
+   align-content: center;
+   align-items: stretch;
+   justify-content: space-evenly;
+   background-color: inherit;
+}
+
+.tag-container {
+   display: flex;
+   flex-flow: column nowrap;
+}
+
+.name {
+   grid-area: name;
+}
+
+.manuf {
+   grid-area: man;
+}
+
+.ordered {
+   grid-area: ord;
+}
+
+.inventory {
+   grid-area: inv;
+}
+
+.desc {
+   grid-area: desc;
+   justify-content: stretch;
+   padding: 0 1rem;
+}
+
+.tag {
+   grid-area: tag;
+}
+
+.pack {
+   grid-area: pack;
+}
+
+.datasheet {
+   grid-area: ds;
+}
+
+.datasheet-container {
+   display: flex;
+   flex-flow: column nowrap;
+   justify-content: space-around;
+   align-items: center;
+   background-color: var(--link-color);
+   border: var(--border-color) solid 4px;
+}
+
+.desc-label {
+   padding-right: 2rem;
+}

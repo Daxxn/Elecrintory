@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="32"
+   height="32"
+   viewBox="0 0 8.4666667 8.4666667"
+   version="1.1"
+   id="svg5"
+   xmlns="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2" />
+  <g
+     id="layer1">
+    <g
+       id="footprint">
+      <rect
+         style="fill:#141414;fill-opacity:0.25;stroke-width:0.204124;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.75189"
+         id="pad-1"
+         width="1.1024306"
+         height="1.0583334"
+         x="0.044097502"
+         y="2.6458333"
+         ry="0.21166666" />
+      <rect
+         style="fill:#141414;fill-opacity:0.25;stroke-width:0.204124;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.75189"
+         id="pad-2"
+         width="1.1024306"
+         height="1.0583334"
+         x="0.044097502"
+         y="4.7624998"
+         ry="0.21166666" />
+      <rect
+         style="fill:#141414;fill-opacity:0.25;stroke-width:0.204124;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.75189"
+         id="pad-3"
+         width="1.1024306"
+         height="1.0583334"
+         x="0.044097502"
+         y="6.8791666"
+         ry="0.21166666" />
+      <rect
+         style="fill:#141414;fill-opacity:0.25;stroke-width:0.204124;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.75189"
+         id="pad-6"
+         width="1.1024306"
+         height="1.0583334"
+         x="5.5562501"
+         y="2.6458333"
+         ry="0.21166666" />
+      <rect
+         style="fill:#141414;fill-opacity:0.25;stroke-width:0.204124;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.75189"
+         id="pad-5"
+         width="1.1024306"
+         height="1.0583334"
+         x="5.5562501"
+         y="4.7624998"
+         ry="0.21166666" />
+      <rect
+         style="fill:#141414;fill-opacity:0.25;stroke-width:0.204124;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.75189"
+         id="pad-4"
+         width="1.1024306"
+         height="1.0583334"
+         x="5.5562501"
+         y="6.8791666"
+         ry="0.21166666" />
+      <rect
+         style="fill:#141414;fill-opacity:0.25;stroke-width:0.204124;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.75189"
+         id="center-pad"
+         width="2.2048612"
+         height="5.2916665"
+         x="2.2489588"
+         y="2.6458333"
+         ry="0.21166666" />
+    </g>
+    <g
+       id="arrow"
+       transform="matrix(0.81073311,0,0,0.92148086,8.7869984,-0.34818504)">
+      <path
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m -7.9374999,6.614583 1.1022936,-1.6720164 1.4937205,-1.8255998 1.3694487,-1.00083 1.3262038,-0.7932202 -0.79375,-0.79374994 h 2.91041664 V 3.4395833 L -1.3229166,2.6458333 -3.1187067,3.5943762 -4.1226221,4.4807356 -4.9723402,5.4707903 -5.8208333,6.614583 Z"
+         id="arrow-background" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+         d="M -7.9374999,6.6145832 C -7.143793,5.379928 -6.3500588,4.1452304 -5.4680289,3.2632096 -4.585999,2.3811889 -3.6158795,1.8520327 -2.6458333,1.3229166"
+         id="arrow-outside" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m -2.6458333,1.3229166 -0.79375,-0.79374994 h 2.91041664 V 3.4395833 l -0.79374994,-0.79375"
+         id="arrow-head" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1"
+         d="m -7.9374999,6.6145832 h 2.1166666"
+         id="arrow-start" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1"
+         d="M -5.8208333,6.6145832 C -5.1153122,5.6444917 -4.4097707,4.6743721 -3.6600244,4.0128497 -2.910278,3.3513273 -2.1165439,2.9985566 -1.3229166,2.6458333"
+         id="arrow-inside" />
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,9 @@
+.base-package-list {
+   display: flex;
+   flex-flow: column nowrap;
+   align-content: stretch;
+}
+
+.package-disp-container {
+   background-color: var(--background-expander-color);
+}
