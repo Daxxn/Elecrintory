@@ -1,0 +1,12 @@
+.base-part {
+   display: block;
+   border: var(--border-color) solid 4px;
+   padding: 0.5rem 2rem;
+}
+
+.item-element {
+   display: flex;
+   flex-flow: row nowrap;
+   padding: 0;
+   margin: 0.1rem;
+}

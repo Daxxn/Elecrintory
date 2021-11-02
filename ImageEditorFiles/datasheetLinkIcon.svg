@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="32"
+   height="32"
+   viewBox="0 0 8.4666667 8.4666667"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   sodipodi:docname="datasheetLinkIcon.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="true"
+     inkscape:zoom="23.746577"
+     inkscape:cx="11.159503"
+     inkscape:cy="15.16008"
+     inkscape:window-width="1920"
+     inkscape:window-height="1043"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     units="px"
+     inkscape:snap-to-guides="true"
+     inkscape:snap-grids="false">
+    <inkscape:grid
+       type="xygrid"
+       id="grid862" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient4525">
+      <stop
+         style="stop-color:#555555;stop-opacity:1;"
+         offset="0"
+         id="stop4529" />
+      <stop
+         style="stop-color:#555555;stop-opacity:0;"
+         offset="1"
+         id="stop4531" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4525"
+       id="linearGradient4527"
+       x1="1.4594034"
+       y1="4.5028205"
+       x2="7.0015588"
+       y2="4.5028205"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <g
+     inkscape:label="Main"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline">
+    <rect
+       style="fill:url(#linearGradient4527);fill-opacity:1;stroke:none;stroke-width:0.20775;stroke-linecap:round;stroke-linejoin:round"
+       id="Background"
+       width="5.5421553"
+       height="5.5378537"
+       x="1.4594034"
+       y="1.7338936"
+       ry="4.9498166e-08"
+       inkscape:label="Background" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.746138"
+       d="M 1.5875,1.8520833 V 7.1437499 H 6.8791666 V 5.8208333 H 2.9104167 v -3.96875 z"
+       id="Box-Outline"
+       inkscape:label="Box Outline" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.215918px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.75189"
+       d="M 3.6265899,4.8029142 C 4.03327,4.5485146 4.3337708,4.4354742 4.9220997,3.939241 5.3650212,3.4914015 5.3668281,3.3149071 5.7857729,2.6437312 L 5.2537684,2.4994365 6.3617455,2.0678317 6.6999328,2.9654491 6.2690863,2.8055995 C 5.9808068,3.3329748 5.8168181,3.9014773 5.3539364,4.3710776 4.754882,4.8521843 4.4812087,4.957322 4.0584266,5.2347508 Z"
+       id="Arrow"
+       sodipodi:nodetypes="cccccccccc" />
+  </g>
+</svg>

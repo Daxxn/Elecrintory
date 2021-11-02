@@ -1,0 +1,20 @@
+.base-package-comp {
+   padding: 1rem;
+   border: var(--border-color) solid 3px;
+   border-spacing: 1rem;
+   border-radius: 0.25rem;
+}
+
+.select-item-button {
+   all: unset;
+   background-color: transparent;
+   padding: 2rem;
+}
+
+.select-item-button:hover {
+   background-color: var(--background-hover-color);
+}
+
+.selected-package {
+   background-color: var(--selected-color);
+}

@@ -1,0 +1,21 @@
+.base-message-roll-container {
+   display: flex;
+   flex-flow: row nowrap;
+   position: absolute;
+   bottom: 0;
+   left: 0;
+   width: 100%;
+   margin: 0;
+}
+
+.message-text {
+   margin: 0.25rem;
+}
+
+.message-error {
+   background-color: red;
+}
+
+.message-issue {
+   background-color: orange;
+}

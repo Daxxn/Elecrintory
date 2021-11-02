@@ -1,0 +1,25 @@
+.base-user-button {
+   background-color: var(--header-color);
+}
+
+.login-bg {
+   background-color: var(--background-modal-color);
+}
+
+.login-modal {
+   position: absolute;
+   top: 0;
+}
+
+.login-container {
+   position: relative;
+}
+
+.open {
+   display: flex;
+   flex-flow: column nowrap;
+}
+
+.closed {
+   display: none;
+}

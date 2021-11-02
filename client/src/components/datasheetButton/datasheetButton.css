@@ -1,0 +1,24 @@
+.base-ds-button {
+   padding: 2px;
+   margin: 0.2rem;
+   background-color: var(--button-color);
+   color: var(--text-color);
+   stroke: var(--text-color);
+   fill: var(--text-color);
+}
+
+.base-ds-button:hover #Box-Outline {
+   opacity: 0;
+}
+
+.base-ds-button:hover #Arrow {
+   transform: scale(1.4,1.4) translate(-20%, -10%);
+}
+
+#Box-Outline {
+   transition: opacity 300ms ease-out;
+}
+
+#Arrow {
+   transition: transform 300ms ease-out;
+}

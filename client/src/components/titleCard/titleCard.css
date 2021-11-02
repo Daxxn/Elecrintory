@@ -1,0 +1,12 @@
+.base-title-card {
+   display: flex;
+   flex-flow: row nowrap;
+   justify-content: space-between;
+   background-color: var(--header-color);
+}
+
+.base-title-card-no-user {
+   display: flex;
+   flex-flow: row nowrap;
+   align-content: center;
+}

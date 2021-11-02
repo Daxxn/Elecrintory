@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="32"
+   height="32"
+   viewBox="0 0 8.4666667 8.4666667"
+   version="1.1"
+   id="svg5"
+   xmlns="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2" />
+  <g
+     id="layer1">
+    <g
+       id="chip">
+      <path
+         style="fill:#141414;fill-opacity:0.996136;stroke:none;stroke-width:0.301671px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 1.5875001,0.79375005 h 3.96875 V 7.6729167 h -3.96875 z"
+         id="case" />
+      <path
+         style="fill:#787878;fill-opacity:1;stroke:none;stroke-width:0.324046px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="M 1.5875,1.5875 H -1.6875001e-8 V 2.1166667 H 1.5875 Z"
+         id="leg-1" />
+      <path
+         style="fill:#787878;fill-opacity:1;stroke:none;stroke-width:0.324047px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="M 1.5875,4.7625 H -3.6875001e-8 V 5.2916667 H 1.5875 Z"
+         id="leg-2" />
+      <path
+         style="fill:#787878;fill-opacity:1;stroke:none;stroke-width:0.324047px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="M 1.5875,6.35 H 5.3124999e-8 V 6.8791667 H 1.5875 Z"
+         id="leg-3" />
+      <path
+         style="fill:#787878;fill-opacity:1;stroke:none;stroke-width:0.324047px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="M 1.5875,3.175 H 5.3124999e-8 V 3.7041667 H 1.5875 Z"
+         id="leg-4" />
+    </g>
+    <path
+       style="fill:#828282;fill-opacity:0.996136;stroke:none;stroke-width:0.232832px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 2.6458333,3.65125 H 4.9741665 V 1.3229167 H 6.1383336 V 3.65125 H 8.4666667 V 4.8154167 H 6.1383336 V 7.14375 H 4.9741665 V 4.8154167 H 2.6458333 Z"
+       id="plus" />
+  </g>
+</svg>

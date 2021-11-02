@@ -1,0 +1,25 @@
+.base-packages-view {
+   display: grid;
+   grid-template-columns: 1fr 40%;
+   grid-template-rows: 1fr;
+}
+
+.selected-package-container {
+   background-color: var(--select-item-color);
+   padding: 0.5rem;
+}
+
+.package-list-container {
+   grid-column: 1;
+   display: flex;
+   flex-flow: column nowrap;
+}
+
+.selected-package-container {
+   grid-column: 2;
+   background-color: var(--select-item-color);
+}
+
+.selected-package-desc-input {
+   word-wrap: break-word;
+}
