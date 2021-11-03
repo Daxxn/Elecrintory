@@ -71,18 +71,32 @@ const buildPackageRoute = () => {
    router.post('/', async (req, res, next) => {
       try {
          const { body } = req;
+         console.log(body);
          if (body) {
             if (req.session) {
                if (req.session.userId) {
-                  const newPack = new packageModel(body);
+                  const data = {
+                     ...body,
+                  };
+                  if ('_id' in data) {
+                     delete data._id;
+                  }
+                  if ('__v' in data) {
+                     delete data.__v;
+                  }
+                  console.log(data);
+                  const newPack = new packageModel(data);
                   const savedPack = await newPack.save();
                   const foundUser = await userModel.findById(req.session.userId);
-                  const allPacks = await dbHelper.findObjects(packageModel, foundUser.packages);
                   if (foundUser) {
                      if (savedPack) {
                         foundUser.packages.push(savedPack._id);
+                        const savedUser = await foundUser.save();
+                        const allPacks = await dbHelper.findObjects(packageModel, foundUser.packages);
+                        console.log(allPacks);
+                        console.log(savedUser);
                         res.status(201).json({
-                           user: foundUser,
+                           user: savedUser,
                            packages: allPacks,
                         });
                      } else {
@@ -107,7 +121,7 @@ const buildPackageRoute = () => {
    // #endregion
 
    // #region UPDATE/PATCH
-   router.patch('/:id', async (req, res, next) => {
+   router.patch('/', async (req, res, next) => {
       try {
          const { body } = req;
          if (body) {
@@ -141,7 +155,6 @@ const buildPackageRoute = () => {
          } else {
             messageHelper(res, 400, 'noBody');
          }
-         messageHelper(res, 501);
       } catch (err) {
          next(err);
       }
@@ -151,10 +164,30 @@ const buildPackageRoute = () => {
    // #region DELETE
    router.delete('/:id', async (req, res, next) => {
       try {
-         // res.status(501).json({
-         //    message: 'Not Implemented',
-         // });
-         messageHelper(res, 501);
+         const { id } = req.params;
+         if (id) {
+            if (req.session) {
+               if (req.session.userId) {
+                  await Promise.all([
+                     packageModel.deleteOne({ _id: id}).exec(),
+                     partModel.updateMany(
+                        { packages: id },
+                        { $pull: { packages: id } }
+                     ).exec(),
+                     userModel.updateOne(
+                        { packages: id },
+                        { $pull: { packages: id } }
+                     ).exec(),
+                  ]);
+               } else {
+                  messageHelper(res, 500, 'noUserSession');
+               }
+            } else {
+               messageHelper(res, 500, 'noSession');
+            }
+         } else {
+            messageHelper(res, 400, 'noId');
+         }
       } catch (err) {
          next(err);
       }

@@ -7,7 +7,7 @@ const { messageHelper } = require('../utils/messageHelper');
 
 const buildRoute = () => {
    const router = express.Router();
-   // #region GET
+   // #region READ/GET
    router.get('/', async (req, res, next) => {
       try {
          const users = await userModel.find();
@@ -48,7 +48,9 @@ const buildRoute = () => {
          next(err);
       }
    });
+   // #endregion
 
+   // #region UPDATE/PATCH
    router.patch('/:id', async (req, res, next) => {
       try {
          if (req.session) {
@@ -94,6 +96,10 @@ const buildRoute = () => {
          next(err);
       }
    });
+   // #endregion
+
+   // #region DELETE
+   // TODO - Need to decide how im going to handle delete
    // #endregion
 
    return router;

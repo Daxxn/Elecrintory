@@ -74,7 +74,7 @@ function App() {
 
   // }
   // #endregion
-  
+
   return (
     <div className="App">
         <TitleCard

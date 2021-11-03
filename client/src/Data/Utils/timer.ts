@@ -3,7 +3,7 @@ type TimerCallback = () => void;
 class Timer {
    // #region Props
    private static interval: number = 5000;
-   private static readonly maxInterval: number = 5 * 60 * 1000;
+   private static readonly maxInterval: number = 10000;
    private static timerId: NodeJS.Timeout | null = null;
    // #endregion
 

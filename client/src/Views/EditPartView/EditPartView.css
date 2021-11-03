@@ -1,17 +1,20 @@
-.base-part {
+.base-part-edit-view {
+
+}
+.base-part-edit {
    display: grid;
    border: var(--border-color) solid 4px;
    padding: 0.5rem 2rem;
    grid-template-areas: 
-      "name man ord inv edit"
-      "desc desc desc ds ds"
-      "tag tag pack pack pack";
+      "name man ord inv"
+      "desc desc ds ds"
+      "canc canc save save";
 
-   grid-template-columns: 2fr 2fr 2fr 2fr 1fr;
-   grid-template-rows: 4rem 6rem 1fr;
+   grid-template-columns: 1fr 1fr 1fr 1fr;
+   grid-template-rows: 4rem 6rem 2rem;
 }
 
-.part-item-container {
+.part-item-edit-container {
    display: flex;
    flex-flow: row nowrap;
    align-content: center;
@@ -47,20 +50,8 @@
    padding: 0 1rem;
 }
 
-.tag {
-   grid-area: tag;
-}
-
-.pack {
-   grid-area: pack;
-}
-
 .datasheet {
    grid-area: ds;
-}
-
-.edit {
-   grid-area: edit;
 }
 
 .datasheet-container {
@@ -76,12 +67,15 @@
    padding-right: 2rem;
 }
 
-.part-edit-controls {
-   display: flex;
-   flex-flow: row nowrap;
-   align-items: flex-start;
+.save-button {
+   grid-area: save;
 }
 
-.edit-button {
-   margin-right: 0.2rem;
+.cancel-button {
+   grid-area: canc;
+}
+
+.part-input-edit {
+   max-width: 10rem;
+   min-width: 5rem;
 }

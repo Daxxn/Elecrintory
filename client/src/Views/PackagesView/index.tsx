@@ -63,17 +63,23 @@ const PackagesView = (props: PackagesViewProps): JSX.Element => {
       }
    };
 
+   const handleClearPackage = () => {
+      handleSetSelectedPackage(null);
+   };
+
    const handleCreatePackage = async (pack: PackageModel) => {
-      await ModelObserver.addPackage(pack);
+      await ModelObserver.newPackage(pack);
    };
 
    const handleSavePackage = async (pack: PackageModel) => {
       await ModelObserver.updatePackage(pack);
-   }
+   };
 
-   const handleClearPackage = () => {
-      handleSetSelectedPackage(null);
-   }
+   const handleDeletePackage = async () => {
+      if (selectedPackage) {
+         await ModelObserver.deletePackage(selectedPackage._id);
+      }
+   };
    
    return (
       <div className="base-packages-view">
@@ -104,6 +110,7 @@ const PackagesView = (props: PackagesViewProps): JSX.Element => {
                handleCreatePackage={handleCreatePackage}
                handleSavePackage={handleSavePackage}
                handleClearPackage={handleClearPackage}
+               handleDeletePackage={handleDeletePackage}
             />
          </div>
       </div>

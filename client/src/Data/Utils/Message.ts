@@ -20,6 +20,15 @@ class Message {
    }
 
    /**
+    * Display a message from the server.
+    * @param message Message from Server
+    * @param statusCode HTTP Status Code.
+    */
+   static response(message: string, statusCode: number) {
+      this.msg(message, URLHelper.statusCheck(statusCode));
+   }
+
+   /**
     * Dsiplay a message to the user with status.
     * Status changes the color of the beckground.
     * @param {string} message Text to display.
@@ -30,24 +39,9 @@ class Message {
       if (process.env.REATC_APP_DEBUG === 'true') {
          console.log(message);
       }
+      console.log(message);
       this.messageCallback(message);
       this.statusCallback(status);
-
-      // After the timer is done, resets the
-      // message and status on the UI.
-      Timer.start(() => {
-         this.messageCallback(null);
-         this.statusCallback('ok');
-      });
-   }
-
-   static response(message: string, statusCode: number) {
-      // Runs first, parses the status code, & sets the UI
-      if (process.env.REATC_APP_DEBUG === 'true') {
-         console.log(message);
-      }
-      this.messageCallback(message);
-      this.statusCallback(URLHelper.statusCheck(statusCode));
 
       // After the timer is done, resets the
       // message and status on the UI.

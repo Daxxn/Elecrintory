@@ -1,10 +1,9 @@
 import PartModel, { PackageCollection, PackageModel, PartCollection } from "./DataModels";
 import UserModel, { Creds } from "./UserModel";
 import URLHelper, { StatusResult } from '../Utils/urlHelper';
-import { LoginResponse, MessageResponse, NewPackageResponse, NewPartResponse, RegisterResponse, UpdatedPackageResponse, UpdatedPartResponse, UpdatedUserResponse, UserDataResponse } from './Responses';
+import { DeletedResponse, LoginResponse, MessageResponse, NewPackageResponse, NewPartResponse, RegisterResponse, UpdatedPackageResponse, UpdatedPartResponse, UpdatedUserResponse, UserDataResponse } from './Responses';
 import Cookies from 'js-cookie';
 import Message from "../Utils/Message";
-import { log } from "console";
 
 type UserCallback = (user: UserModel | null) => void;
 type PartCallback = (part: PartModel | PartCollection) => void;
@@ -60,7 +59,6 @@ class ModelObserver {
    }
 
    static getPart(id: string) {
-      // console.log(this.parts);
       if (this.parts[id]) {
          return this.parts[id];
       }
@@ -84,7 +82,6 @@ class ModelObserver {
    static setPartCollection(parts: PartCollection) {
       this.parts = parts;
       this.updateUserObservers(this.user);
-      // this.updatePartCollectionObservers(parts);
    }
    
    static setPart(part: PartModel) {
@@ -136,6 +133,7 @@ class ModelObserver {
    static async updatePackage(pack: PackageModel) {
       Message.log('Updating Package...');
       try {
+         console.log(pack);
          const req = URLHelper.buildDataFetch('packages', 'PATCH', '', pack);
          const res = await fetch(req.url, req.config);
          if (URLHelper.quickStatusCheck(res.status)) {
@@ -210,32 +208,8 @@ class ModelObserver {
       }
    }
 
-   // NOTE - OLD version
-   // static addPart(partName: string) {
-   //    if (partName && this.user) {
-   //       Message.log('Creating new part...');
-   //       // const newPart = {
-   //       //    partName,
-   //       // };
-   //       // const req = URLHelper.buildDataFetch('parts', 'POST', '', newPart);
-   //       const req = URLHelper.buildDataFetch('parts', 'POST', partName);
-
-   //       fetch(req.url, req.config)
-   //          .then(req => req.json())
-   //          .then(data => {
-   //             const newData = data as NewPartResponse;
-   //             console.log(newData);
-   //             if (newData && this.user) {
-   //                this.user = newData.user;
-   //                this.parts = newData.parts;
-   //                this.updateUserObservers(newData.user);
-   //             }
-   //          })
-   //          .catch(err => console.log(err));
-   //    }
-   // }
-
-   static async addPart(partName: string) {
+   // #region New Requests
+   static async newPart(partName: string) {
       if (partName && this.user) {
          Message.log('Creating new part...');
          const req = URLHelper.buildDataFetch('parts', 'POST', partName);
@@ -257,20 +231,22 @@ class ModelObserver {
       }
    }
 
-   static async addPackage(pack: PackageModel) {
+   static async newPackage(pack: PackageModel) {
       Message.log('Creating Package...');
       try {
          const req = URLHelper.buildDataFetch('packages', 'POST', '', pack);
          const res = await fetch(req.url, req.config);
+         console.log(pack);
          if (URLHelper.quickStatusCheck(res.status)) {
             const data = (await res.json()) as NewPackageResponse;
             if (data) {
                this.user = data.user;
                this.packages = data.packages;
                Message.response('Package Created.', res.status);
+               console.log(data.user);
                this.updateUserObservers(data.user);
             } else {
-               Message.response('No data returned.', res.status);
+               Message.response('No Data Returned.', res.status);
             }
          } else {
             const data = (await res.json()) as MessageResponse;
@@ -285,6 +261,69 @@ class ModelObserver {
          }
       }
    }
+   // #endregion
+
+   // #region Delete Requests
+   static async deletePart(partId: string) {
+      try {
+         Message.log('Deleting Part');
+         const req = URLHelper.buildDataFetch('parts', 'DELETE', partId);
+         const res = await fetch(req.url, req.config);
+         console.log(partId);
+         if (URLHelper.quickStatusCheck(res.status)) {
+            const data = (await res.json()) as DeletedResponse;
+            if (data) {
+               this.user = data.user;
+               delete this.parts[partId];
+               Message.response('Part Deleted.', res.status);
+               this.updateUserObservers(data.user);
+            } else {
+               Message.response('No Data Returned', res.status);
+            }
+         } else {
+            const data = (await res.json()) as MessageResponse;
+            Message.response(data.message, res.status);
+         }
+      } catch (err) {
+         const error = err as Error;
+         if (error.message) {
+            Message.msg(error.message, 'error');
+         } else {
+            Message.msg('Unknown error', 'error');
+         }
+      }
+   }
+
+   static async deletePackage(packageId: string) {
+      try {
+         Message.log('Deleting Package');
+         const req = URLHelper.buildDataFetch('parts', 'DELETE', packageId);
+         const res = await fetch(req.url, req.config);
+         console.log(packageId);
+         if (URLHelper.quickStatusCheck(res.status)) {
+            const data = (await res.json()) as DeletedResponse;
+            if (data) {
+               this.user = data.user;
+               delete this.packages[packageId];
+               Message.response('Package Deleted.', res.status);
+               this.updateUserObservers(data.user);
+            } else {
+               Message.response('No Data Returned', res.status);
+            }
+         } else {
+            const data = (await res.json()) as MessageResponse;
+            Message.response(data.message, res.status);
+         }
+      } catch (err) {
+         const error = err as Error;
+         if (error.message) {
+            Message.msg(error.message, 'error');
+         } else {
+            Message.msg('Unknown error', 'error');
+         }
+      }
+   }
+   // #endregion
 
    static async autoLogin() {
       try {

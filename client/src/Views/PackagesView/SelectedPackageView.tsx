@@ -22,6 +22,7 @@ export interface SelectedPackageViewProps {
    handleCreatePackage: (pack: PackageModel) => void;
    handleSavePackage: (pack: PackageModel) => void;
    handleClearPackage: () => void;
+   handleDeletePackage: () => void;
 }
 
 const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
@@ -35,6 +36,7 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
       handleCreatePackage,
       handleSavePackage,
       handleClearPackage,
+      handleDeletePackage,
    } = props;
    const [leadState, setLeadState] = useState<string>(selectedPackage ? selectedPackage.leads.toString() : '0');
    const [newLeadState, setNewLeadState] = useState<string>('0');
@@ -204,6 +206,7 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
             packageSelected={selectedPackage !== null}
             handleAddPackage={handleCreate}
             handleClearPackage={handleClear}
+            handleDeletePackage={handleDeletePackage}
          />
       </div>
    );

@@ -1,5 +1,7 @@
 .package-controls-container {
    display: flex;
    flex-flow: row nowrap;
-   align-content: space-between;
+   align-content: space-around;
+   justify-content: space-evenly;
+   align-items: stretch;
 }

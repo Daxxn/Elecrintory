@@ -21,7 +21,7 @@ const { messageHelper } = require('../utils/messageHelper');
 
 const buildRoute = () => {
    const router = express.Router();
-   // #region READ
+   // #region READ/GET
    router.get('/:id', async (req, res, next) => {
       try {
          const part = await partModel.findById(req.params.id);
@@ -32,7 +32,7 @@ const buildRoute = () => {
    });
    // #endregion
 
-   // #region CREATE
+   // #region CREATE/POST
    router.post('/', async (req, res, next) => {
       try {
          const { body } = req;
@@ -137,7 +137,7 @@ const buildRoute = () => {
    });
    // #endregion
 
-   // #region UPDATE
+   // #region UPDATE/PATCH
    router.patch('/', async (req, res, next) => {
       try {
          const { body } = req;
@@ -174,98 +174,127 @@ const buildRoute = () => {
    });
    // #endregion
 
+   // #region DELETE V1
+   // router.delete('/', async (req, res, next) => {
+   //    try {
+   //       const { body } = req;
+   //       if (body) {
+   //          if (req.session) {
+   //             if (req.session.userId) {
+   //                const foundUser = await userModel.findById(req.session.userId);
+   //                if (foundUser) {
+   //                   const index = foundUser.parts.findIndex(body._id);
+   //                   if (index > 0) {
+   //                      await partsModel.remove({
+   //                         _id: body._id,
+   //                      });
+   //                      foundUser.parts = foundUser.parts.splice(index, 1);
+   //                      const savedUser = await foundUser.save();
+   //                      res.status(200).json({
+   //                         user: savedUser,
+   //                         partId: body._id,
+   //                      });
+   //                   } else {
+   //                      res.status(400).json({
+   //                         message: 'Unable to find part.',
+   //                      });
+   //                   }
+   //                } else {
+   //                   res.status(400).json({
+   //                      message: 'No User found.',
+   //                   });
+   //                }
+   //             } else {
+   //                res.status(400).json({
+   //                   message: 'No Session User ID',
+   //                });
+   //             }
+   //          } else {
+   //             res.status(400).json({
+   //                message: 'No Session',
+   //             });
+   //          }
+   //       } else {
+   //          res.status(400).json({
+   //             message: 'No Body.',
+   //          });
+   //       }
+   //    } catch (err) {
+   //       next(err);
+   //    }
+   // });
+   // router.delete('/:id', async (req, res, next) => {
+   //    try {
+   //       const { id } = req.params;
+   //       if (id) {
+   //          if (req.session) {
+   //             if (req.session.userId) {
+   //                const foundUser = await userModel.findById(req.session.userId);
+   //                if (foundUser) {
+   //                   const index = foundUser.parts.findIndex(id);
+   //                   if (index > 0) {
+   //                      await partsModel.remove({
+   //                         _id: id,
+   //                      });
+   //                      foundUser.parts = foundUser.parts.splice(index, 1);
+   //                      const savedUser = await foundUser.save();
+   //                      res.status(200).json({
+   //                         user: savedUser,
+   //                         partId: id,
+   //                      });
+   //                   } else {
+   //                      res.status(400).json({
+   //                         message: 'Unable to find part.',
+   //                      });
+   //                   }
+   //                } else {
+   //                   res.status(400).json({
+   //                      message: 'No User found.',
+   //                   });
+   //                }
+   //             } else {
+   //                res.status(400).json({
+   //                   message: 'No Session User ID',
+   //                });
+   //             }
+   //          } else {
+   //             res.status(400).json({
+   //                message: 'No Session',
+   //             });
+   //          }
+   //       } else {
+   //          res.status(400).json({
+   //             message: 'No ID.',
+   //          });
+   //       }
+   //    } catch (err) {
+   //       next(err);
+   //    }
+   // });
+   // #endregion
+
    // #region DELETE
-   router.delete('/', async (req, res, next) => {
-      try {
-         const { body } = req;
-         if (body) {
-            if (req.session) {
-               if (req.session.userId) {
-                  const foundUser = await userModel.findById(req.session.userId);
-                  if (foundUser) {
-                     const index = foundUser.parts.findIndex(body._id);
-                     if (index > 0) {
-                        await partsModel.remove({
-                           _id: body._id,
-                        });
-                        foundUser.parts = foundUser.parts.splice(index, 1);
-                        const savedUser = await foundUser.save();
-                        res.status(200).json({
-                           user: savedUser,
-                           partId: body._id,
-                        });
-                     } else {
-                        res.status(400).json({
-                           message: 'Unable to find part.',
-                        });
-                     }
-                  } else {
-                     res.status(400).json({
-                        message: 'No User found.',
-                     });
-                  }
-               } else {
-                  res.status(400).json({
-                     message: 'No Session User ID',
-                  });
-               }
-            } else {
-               res.status(400).json({
-                  message: 'No Session',
-               });
-            }
-         } else {
-            res.status(400).json({
-               message: 'No Body.',
-            });
-         }
-      } catch (err) {
-         next(err);
-      }
-   });
    router.delete('/:id', async (req, res, next) => {
       try {
          const { id } = req.params;
          if (id) {
             if (req.session) {
                if (req.session.userId) {
-                  const foundUser = await userModel.findById(req.session.userId);
-                  if (foundUser) {
-                     const index = foundUser.parts.findIndex(id);
-                     if (index > 0) {
-                        await partsModel.remove({
-                           _id: id,
-                        });
-                        foundUser.parts = foundUser.parts.splice(index, 1);
-                        const savedUser = await foundUser.save();
-                        res.status(200).json({
-                           user: savedUser,
-                           partId: id,
-                        });
-                     } else {
-                        res.status(400).json({
-                           message: 'Unable to find part.',
-                        });
-                     }
-                  } else {
-                     res.status(400).json({
-                        message: 'No User found.',
-                     });
-                  }
+                  await Promise.all([
+                     partModel.deleteOne({ _id: id}).exec(),
+                     userModel.updateOne(
+                        { packages: id },
+                        { $pull: { packages: id } }
+                     ).exec(),
+                  ]);
                } else {
-                  res.status(400).json({
-                     message: 'No Session User ID',
-                  });
+                  messageHelper(res, 500, 'noUserSession');
                }
             } else {
-               res.status(400).json({
-                  message: 'No Session',
-               });
+               messageHelper(res, 500, 'noSession');
             }
          } else {
-            res.status(400).json({
-               message: 'No ID.',
-            });
+            messageHelper(res, 400, 'noId');
          }
       } catch (err) {
          next(err);

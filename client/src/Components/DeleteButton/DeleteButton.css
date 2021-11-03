@@ -1,0 +1,21 @@
+.delete-container {
+   display: flex;
+   flex-flow: row nowrap;
+   align-content: stretch;
+   justify-content: flex-start;
+   align-items: stretch;
+}
+
+.confirm-button {
+   background-color: var(--valid-color);
+   margin-right: 0.2rem;
+}
+
+.cancel-button {
+   background-color: var(--invalid-color);
+   margin-right: 0.2rem;
+}
+
+.delete-button {
+   margin-right: 0.2rem;
+}

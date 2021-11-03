@@ -16,6 +16,7 @@ const { messageHelper, messages } = require('./utils/messageHelper');
 const userRoute = require('./routes/user');
 const authRoute = require('./routes/auth');
 const partsRoute = require('./routes/part');
+const packageRoute = require('./routes/package');
 // #endregion
 
 // #endregion
@@ -56,6 +57,7 @@ const apiRoutes = (app, db) => {
    const apiRouter = express.Router();
    apiRouter.use('/user', userRoute());
    apiRouter.use('/parts', partsRoute());
+   apiRouter.use('/packages', packageRoute());
    app.use('/api', apiRouter);
 };
 // #endregion

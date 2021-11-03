@@ -19,7 +19,7 @@ const PartsList = (props: PartsListProps): JSX.Element => {
    const userLoggedIn = ModelObserver.getUser() != null;
 
    const handleAddPart = async (partName: string) => {
-      await ModelObserver.addPart(partName);
+      await ModelObserver.newPart(partName);
    }
 
    return userLoggedIn ? (

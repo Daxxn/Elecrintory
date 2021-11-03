@@ -6,6 +6,7 @@ export interface PackageControlsProps {
    packageSelected: boolean;
    handleAddPackage: () => void;
    handleClearPackage: () => void;
+   handleDeletePackage: () => void;
 }
 
 const PackageControls = (props: PackageControlsProps): JSX.Element => {
@@ -13,17 +14,17 @@ const PackageControls = (props: PackageControlsProps): JSX.Element => {
       packageSelected,
       handleAddPackage,
       handleClearPackage,
+      handleDeletePackage,
    } = props;
 
    return packageSelected ? (
       <div className="package-controls-container">
-         <p>Selected Package</p>
          <AddPackageButton handleCreate={handleAddPackage} />
+         <button onClick={handleDeletePackage}>Delete</button>
          <button onClick={handleClearPackage}>Clear</button>
       </div>
    ) : (
       <div className="package-controls-container">
-         <p>New Package</p>
          <AddPackageButton handleCreate={handleAddPackage} />
          <button onClick={handleClearPackage}>Clear</button>
       </div>

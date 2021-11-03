@@ -25,7 +25,7 @@ class URLHelper {
          method,
          credentials: 'include',
          headers: this.basicHeader,
-         body: body ?? JSON.stringify(body),
+         body: body ? JSON.stringify(body) : null,
       }
       return {url, config};
    }

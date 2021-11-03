@@ -2,6 +2,8 @@
    display: grid;
    grid-template-columns: 1fr 40%;
    grid-template-rows: 1fr;
+   display: flex;
+   flex-direction: column;
 }
 
 .selected-package-container {
@@ -24,4 +26,8 @@
 
 .selected-package-desc-input {
    word-wrap: break-word;
+}
+
+.base-selected-package-view {
+   position: sticky;
 }
