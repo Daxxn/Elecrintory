@@ -12,14 +12,9 @@ interface UserModel extends BaseModel {
 }
 
 class UserModel {
-   // #region Props
    username = '';
    parts: string[] = [];
    packages: string[] = [];
-   // #endregion
-
-   // #region Methods
-   // #endregion
 }
 
 export default UserModel;

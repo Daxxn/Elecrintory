@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReactComponent as Icon } from '../../Icons/AddToPartIcon.svg';
+import { ReactComponent as Icon } from '../../Icons/AddToPartIcon2.svg';
 import './LinkPackageButton.css';
 
 export interface LinkPackageButtonProps {
@@ -10,7 +10,7 @@ const LinkPackageButton = (props: LinkPackageButtonProps): JSX.Element => {
    const { onClick } = props;
 
    return (
-      <button className="icon-button" onClick={onClick}>
+      <button type="button" className="base-link-button" onClick={onClick}>
          <Icon />
       </button>
    );

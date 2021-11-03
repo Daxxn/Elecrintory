@@ -37,10 +37,8 @@ interface PartModel extends BaseModel {
 }
 
 class PartModel {
-   // #region Props
    partName = '';
    datasheet = '';
-   // #endregion
 }
 
 export default PartModel;

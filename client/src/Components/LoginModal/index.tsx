@@ -5,8 +5,6 @@ import './LoginModal.css';
 export interface LoginModalProps {
    creds: Creds;
    open: boolean;
-   // handleUsernameChange: (username: string | null) => void;
-   // handlepasswordChange: (password: string | null) => void;
    handleCredsChange: (creds: Creds) => void;
    handleLogin: (creds: Creds) => void;
    handleRegister: (creds: Creds) => void;
@@ -22,10 +20,7 @@ const LoginModal = (props: LoginModalProps): JSX.Element => {
       handleCredsChange,
       handleRegister,
       handleCloseModal,
-      // handleUsernameChange,
-      // handlepasswordChange,
    } = props;
-   // const user = ModelObserver.getUser();
 
    const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
       if (e.target.id === 'username-input') {

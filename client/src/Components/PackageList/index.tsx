@@ -14,17 +14,20 @@ const PackageList = (props: PackageListProps): JSX.Element => {
 
    return (
       <div className="base-package-list">
+         <p>Packages</p>
          <Expander>
             <LinkPackageButton onClick={handleAddPackage} />
-            {packageIds.length > 0 ? (
-               <>
-                  {packageIds.map(p => (
-                     <PackageDisplay key={`part-package-comp-${p}`} packageId={p}/>
-                  ))}
-               </>
-            ) : (
-               <p>No Packages</p>
-            )}
+            <div className="package-container">
+               {packageIds.length > 0 ? (
+                  <>
+                     {packageIds.map(p => (
+                        <PackageDisplay key={`part-package-comp-${p}`} packageId={p}/>
+                     ))}
+                  </>
+               ) : (
+                  <p>No Packages</p>
+               )}
+            </div>
          </Expander>
       </div>
    );

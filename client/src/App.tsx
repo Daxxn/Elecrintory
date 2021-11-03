@@ -35,46 +35,20 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // ModelObserver.autoLogin()
-    //   .then(result => {
-    //     var message = 'Auto-login failed...';
-    //     if (result === 'ok') {
-    //       message = 'Auto login successful...';
-    //     }
-    //     messageCallback(message, result);
-    //   });
       setSelectedPackage(null);
       setSelectedTag(null);
       ModelObserver.autoLogin();
-    return () => {
-      // setMessage(null);
-      // setStatus('ok');
-    };
+    return () => { };
   }, []);
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setMessage(null);
-  //     setStatus('ok');
-  //     console.log('Finished Message');
-  //   }, 5000);
-  //   return () => { }
-  // }, [message, status]);
 
   // #region Auth Handlers
   const handleLogin = async () => {
-    // setMessage('starting Login...');
     await ModelObserver.login(creds);
-    // setMessage(result === 'ok' ? 'Logged in.' : 'Unable to log in.');
-    // setStatus(result);
     setCreds(blankCreds);
   };
 
   const handleRegister = async () => {
-    // setMessage('starting Register...');
     await ModelObserver.register(creds);
-    // setMessage(result === 'ok' ? 'Register complete. Login to continue.' : 'Unable to register.');
-    // setStatus(result);
     setCreds(blankCreds);
   };
 
@@ -82,8 +56,6 @@ function App() {
     if (user) {
       setMessage('starting Logout...');
       await ModelObserver.logout();
-      // setMessage(result === 'ok' ? 'Logged out in.' : 'Unable to log out.');
-      // setStatus(result);
       setCreds(blankCreds);
       setSelectedTag(null);
       setSelectedPackage(null);
@@ -96,23 +68,13 @@ function App() {
     setCreds(creds);
   }
 
-  // const messageCallback = (message: string, result: StatusResult) => {
-  //   setMessage(message);
-  //   setStatus(result);
-  //   console.log('Started Timer.');
-  //   Timer.start(() => {
-  //     setMessage(null);
-  //     setStatus('ok');
-  //     console.log('Finished Timer.')
-  //   });
-  // }
-
   // NOTE Trying to use the ModelObserver to update the part instead
   // NOTE of the callback nightmare. It may not work as intended tho.
   // const handleAddSelectedPackage = (packageId: string) => {
 
   // }
   // #endregion
+  
   return (
     <div className="App">
         <TitleCard
@@ -129,7 +91,6 @@ function App() {
           selectedPackage={selectedPackage}
           handleSelectTag={(tag) => setSelectedTag(tag)}
           handleSetSelectedPackage={setSelectedPackage}
-          // handleSelectedPack={handleAddSelectedPackage}
         />
         <MessageRoll message={message} status={status} />
     </div>

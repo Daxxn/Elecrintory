@@ -11,14 +11,12 @@ export interface PartProps {
    partId: string;
    selectedPackageId: string | null;
    handleSelectTag: (tag: string) => void;
-   // handleAddSelectedPack: (partId: string) => void;
 }
 
 const Part = (props: PartProps): JSX.Element => {
    const {
       partId,
       handleSelectTag,
-      // handleAddSelectedPack,
       selectedPackageId
    } = props;
    const foundPart = ModelObserver.getPart(partId);
@@ -35,7 +33,6 @@ const Part = (props: PartProps): JSX.Element => {
    }, [partId]);
 
    const handleAddSelectedPackage = () => {
-      // handleAddSelectedPack(partId);
       if (selectedPackageId) {
          ModelObserver.addSelectedPackage(partId, selectedPackageId);
       }
