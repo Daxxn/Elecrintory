@@ -10,15 +10,12 @@ export interface MessageRollProps {
 const MessageRoll = (props: MessageRollProps): JSX.Element => {
    const { message, status } = props;
 
-   var messageClass = "message-text";
-   if (status !== 'ok') {
-      messageClass = `message-text message-${status}`;
-   }
-
    return (
-      <div className="base-message-roll-container">
+      // <div className="message-roll-container">
+      <div className={`message-roll-container message-${status}`}>
          {message ? (
-            <p className={messageClass}>{message}</p>
+            // <p className={`message-text message-${status}`}>{message}</p>
+            <p className="message-text">{message}</p>
          ) : ''}
       </div>
    );

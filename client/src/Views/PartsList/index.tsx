@@ -2,13 +2,13 @@ import React from 'react';
 import AddPartButton from '../../Components/AddPart';
 import Part from '../../Components/Part';
 import ModelObserver from '../../Data/Models/ModelObserver';
-import { StatusResult } from '../../Data/Utils/urlHelper';
+// import { StatusResult } from '../../Data/Utils/urlHelper';
 import './PartsList.css';
 
 export interface PartsListProps {
    parts: string[];
    selectedPackageId: string | null;
-   messageCallback: (message: string, status: StatusResult) => void;
+   // messageCallback: (message: string, status: StatusResult) => void;
    handleSelectTag: (tag: string) => void;
    // handleAddSelectedPack: (packageId: string) => void;
 }
@@ -22,8 +22,8 @@ const PartsList = (props: PartsListProps): JSX.Element => {
    } = props;
    const userLoggedIn = ModelObserver.getUser() != null;
 
-   const handleAddPart = (partName: string) => {
-      ModelObserver.addPart(partName);
+   const handleAddPart = async (partName: string) => {
+      await ModelObserver.addPart(partName);
    }
 
    return userLoggedIn ? (

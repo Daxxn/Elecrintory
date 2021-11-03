@@ -2,18 +2,22 @@ import React from 'react';
 import Package from '../../Components/Package';
 import { PackageModel } from '../../Data/Models/DataModels';
 import ModelObserver from '../../Data/Models/ModelObserver';
-import { StatusResult } from '../../Data/Utils/urlHelper';
-import './PackagesView.css';
+// import { StatusResult } from '../../Data/Utils/urlHelper';
 import SelectedPackageView from './SelectedPackageView';
+import './PackagesView.css';
 
 interface PackagesViewProps {
-   messageCallback: (message: string, status: StatusResult) => void;
+   // messageCallback: (message: string, status: StatusResult) => void;
    selectedPackage: PackageModel | null;
    handleSetSelectedPackage: (selected: PackageModel | null) => void;
 }
 
 const PackagesView = (props: PackagesViewProps): JSX.Element => {
-   const { messageCallback, selectedPackage, handleSetSelectedPackage } = props;
+   const {
+      selectedPackage,
+      handleSetSelectedPackage,
+      // messageCallback,
+   } = props;
    const packages = ModelObserver.getPackageCollection();
 
    // #region Input Handling
@@ -63,11 +67,13 @@ const PackagesView = (props: PackagesViewProps): JSX.Element => {
    };
 
    const handleCreatePackage = async (pack: PackageModel) => {
-      messageCallback('Created new Package', await ModelObserver.addPackage(pack));
+      // messageCallback('Created new Package', await ModelObserver.addPackage(pack));
+      await ModelObserver.addPackage(pack);
    };
 
    const handleSavePackage = async (pack: PackageModel) => {
-      messageCallback('Created new Package', await ModelObserver.updatePackage(pack));
+      // messageCallback('Created new Package', await ModelObserver.updatePackage(pack));
+      await ModelObserver.updatePackage(pack);
    }
 
    const handleClearPackage = () => {

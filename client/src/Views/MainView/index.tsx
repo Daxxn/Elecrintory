@@ -1,7 +1,7 @@
 import React from 'react';
 import { PackageModel } from '../../Data/Models/DataModels';
 import UserModel from '../../Data/Models/UserModel';
-import { StatusResult } from '../../Data/Utils/urlHelper';
+// import { StatusResult } from '../../Data/Utils/urlHelper';
 import PackagesView from '../PackagesView';
 import PartsList from '../PartsList';
 import './MainView.css'
@@ -10,7 +10,7 @@ export interface MainViewProps {
    user: UserModel | null;
    selectedTag: string | null;
    selectedPackage: PackageModel | null;
-   messageCallback: (message: string, status: StatusResult) => void;
+   // messageCallback: (message: string, status: StatusResult) => void;
    handleSelectTag: (tag: string) => void;
    handleSetSelectedPackage: (selected: PackageModel | null) => void;
    // handleSelectedPack: (packageId: string) => void;
@@ -20,7 +20,7 @@ const MainView = (props: MainViewProps): JSX.Element => {
    const {
       user,
       selectedPackage,
-      messageCallback,
+      // messageCallback,
       handleSelectTag,
       handleSetSelectedPackage,
       // handleSelectedPack,
@@ -34,13 +34,28 @@ const MainView = (props: MainViewProps): JSX.Element => {
                <PartsList
                   parts={user.parts}
                   selectedPackageId={selectedPackage ? selectedPackage._id : null}
-                  messageCallback={messageCallback}
+                  // messageCallback={messageCallback}
                   handleSelectTag={handleSelectTag}
                   // handleAddSelectedPack={handleSelectedPack}
                />
+               {/* NOTE Testing Only */}
+               {/* <div>
+                  <button onClick={() => messageCallback('Test Message...', 'ok')}>
+                     Message Test
+                  </button>
+                  <button onClick={() => messageCallback('Test Message...', 'unauth')}>
+                     Message Unauth Test
+                  </button>
+                  <button onClick={() => messageCallback('Test Message...', 'issue')}>
+                     Message Issue Test
+                  </button>
+                  <button onClick={() => messageCallback('Test Message...', 'error')}>
+                     Message Error Test
+                  </button>
+               </div> */}
                <PackagesView
                   selectedPackage={selectedPackage}
-                  messageCallback={messageCallback}
+                  // messageCallback={messageCallback}
                   handleSetSelectedPackage={handleSetSelectedPackage}
                />
             </div>

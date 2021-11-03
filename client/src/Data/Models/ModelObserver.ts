@@ -1,8 +1,10 @@
 import PartModel, { PackageCollection, PackageModel, PartCollection } from "./DataModels";
 import UserModel, { Creds } from "./UserModel";
 import URLHelper, { StatusResult } from '../Utils/urlHelper';
-import { LoginResponse, MessageResponse, NewPackageResponse, NewPartResponse, RegisterResponse, UpdatedPackageResponse, UpdatedPartResponse, UserDataResponse } from './Responses';
+import { LoginResponse, MessageResponse, NewPackageResponse, NewPartResponse, RegisterResponse, UpdatedPackageResponse, UpdatedPartResponse, UpdatedUserResponse, UserDataResponse } from './Responses';
 import Cookies from 'js-cookie';
+import Message from "../Utils/Message";
+import { log } from "console";
 
 type UserCallback = (user: UserModel | null) => void;
 type PartCallback = (part: PartModel | PartCollection) => void;
@@ -109,54 +111,78 @@ class ModelObserver {
    // #region Update Methods
    private static async updateUser() {
       try {
+         Message.log('Updating User...');
          const req = URLHelper.buildDataFetch('user', 'PATCH', undefined, this.user);
          const res = await fetch(req.url, req.config);
-         const data = await res.json();
-         console.log(data);
-         if (!data.message) {
-            this.updateUserObservers(data);
+         if (URLHelper.quickStatusCheck(res.status)) {
+            const data = (await res.json()) as UpdatedUserResponse;
+            Message.response('User Updated.', res.status);
+            this.user = data.user;
+            this.updateUserObservers(data.user);
+         } else {
+            const data = (await res.json()) as MessageResponse;
+            Message.response(data.message, res.status);
          }
       } catch (err) {
-         console.log(err);
+         const error = err as Error;
+         if (error.message) {
+            Message.msg(error.message, 'error');
+         } else {
+            Message.msg('Unknown error', 'error');
+         }
       }
    }
 
-   static async updatePackage(pack: PackageModel): Promise<StatusResult> {
-      console.log('Send Package PATCH request...\n', pack);
+   static async updatePackage(pack: PackageModel) {
+      Message.log('Updating Package...');
       try {
          const req = URLHelper.buildDataFetch('packages', 'PATCH', '', pack);
          const res = await fetch(req.url, req.config);
          if (URLHelper.quickStatusCheck(res.status)) {
             const data = (await res.json()) as UpdatedPackageResponse;
             this.packages[data.package._id] = data.package;
+            Message.response('Package Updated.', res.status);
             this.updatePackageObservers(data.package);
+         } else {
+            const data = (await res.json()) as MessageResponse;
+            Message.response(data.message, res.status);
          }
-         return URLHelper.statusCheck(res.status);
       } catch (err) {
-         console.log(err);
-         return 'error';
+         const error = err as Error;
+         if (error.message) {
+            Message.msg(error.message, 'error');
+         } else {
+            Message.msg('Unknown error', 'error');
+         }
       }
    }
 
-   static async updatePart(part: PartModel): Promise<StatusResult> {
-      console.log('Send Package PART request...\n', part);
+   static async updatePart(part: PartModel) {
+      Message.msg('Starting part update', 'ok');
       try {
          const req = URLHelper.buildDataFetch('parts', 'PATCH', '', part);
          const res = await fetch(req.url, req.config);
          if (URLHelper.quickStatusCheck(res.status)) {
             const data = (await res.json()) as UpdatedPartResponse;
             this.parts[data.part._id] = data.part;
+            Message.response('Updated Part', res.status);
             this.updatePartObservers(data.part);
+         } else {
+            const data = (await res.json()) as MessageResponse;
+            Message.response(data.message, res.status);
          }
-         return URLHelper.statusCheck(res.status);
       } catch (err) {
-         console.log(err);
-         return 'error';
+         const error = err as Error;
+         if (error.message) {
+            Message.msg(error.message, 'error');
+         } else {
+            Message.msg('Unknown error', 'error');
+         }
       }
    }
    // #endregion
 
-   private static async fetchUserData(): Promise<StatusResult> {
+   private static async fetchUserData() {
       try {
          if (this.user) {
             const req = URLHelper.buildDataFetch('user', 'GET', this.user._id);
@@ -165,44 +191,74 @@ class ModelObserver {
                const data = (await res.json()) as UserDataResponse;
                this.parts = data.parts;
                this.packages = data.packages;
+               Message.msg('User Login and setup Complete', URLHelper.statusCheck(res.status));
                this.updateUserObservers(this.user);
             } else {
                const data = (await res.json()) as MessageResponse;
-               console.log(data.message);
+               Message.msg(data.message, URLHelper.statusCheck(res.status));
             }
-            return URLHelper.statusCheck(res.status);
+         } else {
+            Message.msg('Your already logged in. how did you do that?', 'error');
          }
-         return 'ok';
       } catch (err) {
-         console.log(err);
-         return 'error';
+         const error = err as Error;
+         if (error.message) {
+            Message.msg(error.message, 'error');
+         } else {
+            Message.msg('Unknown error', 'error');
+         }
       }
    }
 
-   static addPart(partName: string) {
+   // NOTE - OLD version
+   // static addPart(partName: string) {
+   //    if (partName && this.user) {
+   //       Message.log('Creating new part...');
+   //       // const newPart = {
+   //       //    partName,
+   //       // };
+   //       // const req = URLHelper.buildDataFetch('parts', 'POST', '', newPart);
+   //       const req = URLHelper.buildDataFetch('parts', 'POST', partName);
+
+   //       fetch(req.url, req.config)
+   //          .then(req => req.json())
+   //          .then(data => {
+   //             const newData = data as NewPartResponse;
+   //             console.log(newData);
+   //             if (newData && this.user) {
+   //                this.user = newData.user;
+   //                this.parts = newData.parts;
+   //                this.updateUserObservers(newData.user);
+   //             }
+   //          })
+   //          .catch(err => console.log(err));
+   //    }
+   // }
+
+   static async addPart(partName: string) {
       if (partName && this.user) {
-         // const newPart = {
-         //    partName,
-         // };
-         // const req = URLHelper.buildDataFetch('parts', 'POST', '', newPart);
+         Message.log('Creating new part...');
          const req = URLHelper.buildDataFetch('parts', 'POST', partName);
-         fetch(req.url, req.config)
-            .then(req => req.json())
-            .then(data => {
-               const newData = data as NewPartResponse;
-               console.log(newData);
-               if (newData && this.user) {
-                  this.user = newData.user;
-                  this.parts = newData.parts;
-                  this.updateUserObservers(newData.user);
-               }
-            })
-            .catch(err => console.log(err));
+         const res = await fetch(req.url, req.config);
+         if (URLHelper.quickStatusCheck(res.status)) {
+            const data = (await res.json()) as NewPartResponse;
+            if (data.user) {
+               this.user = data.user;
+               this.parts = data.parts;
+               Message.msg('Part Created successfuly.', 'ok');
+               this.updateUserObservers(data.user);
+            } else {
+               Message.msg('Part Creation Error.', 'error');
+            }
+         } else {
+            const data = (await res.json()) as MessageResponse;
+            Message.msg(data.message, URLHelper.statusCheck(res.status));
+         }
       }
    }
 
-   static async addPackage(pack: PackageModel): Promise<StatusResult> {
-      console.log('Create package and send to server...');
+   static async addPackage(pack: PackageModel) {
+      Message.log('Creating Package...');
       try {
          const req = URLHelper.buildDataFetch('packages', 'POST', '', pack);
          const res = await fetch(req.url, req.config);
@@ -211,52 +267,63 @@ class ModelObserver {
             if (data) {
                this.user = data.user;
                this.packages = data.packages;
+               Message.response('Package Created.', res.status);
                this.updateUserObservers(data.user);
+            } else {
+               Message.response('No data returned.', res.status);
             }
+         } else {
+            const data = (await res.json()) as MessageResponse;
+            Message.response(data.message, res.status);
          }
-         return URLHelper.statusCheck(res.status);
       } catch (err) {
-         return 'error';
+         const error = err as Error;
+         if (error.message) {
+            Message.msg(error.message, 'error');
+         } else {
+            Message.msg('Unknown error', 'error');
+         }
       }
    }
 
-   static async autoLogin(): Promise<StatusResult> {
+   static async autoLogin() {
       try {
-         var response: StatusResult = 'ok';
+         Message.log('Attempting Auto-Login...');
          const userId = Cookies.get('userId');
          const loggedIn = Cookies.get('loggedIn');
          if (userId && loggedIn === 'true') {
             const req = URLHelper.buildDataFetch('user', 'GET', userId);
-            console.log('Starting Auto-Login Attempt');
             const res = await fetch(req.url, req.config);
             if (URLHelper.quickStatusCheck(res.status)) {
                const data = (await res.json()) as LoginResponse;
                if (data.user) {
                   Cookies.set('loggedIn', 'true');
                   this.user = data.user;
-                  response = await this.fetchUserData();
+                  await this.fetchUserData();
                }
             } else {
                const data = (await res.json()) as MessageResponse;
-               console.log(data.message);
+               Message.response(data.message, res.status);
             }
-            if (response === 'ok') {
-               return URLHelper.statusCheck(res.status);
-            }
+         } else {
+            Message.msg('Not logged in...', 'unauth');
          }
-         return response;
       } catch (err) {
-         console.log(err);
-         return 'error';
+         const error = err as Error;
+         if (error.message) {
+            Message.msg(error.message, 'error');
+         } else {
+            Message.msg('Unknown error', 'error');
+         }
       }
    }
 
    // #region Authentication Handling
-   static async login(creds: Creds): Promise<StatusResult> {
+   static async login(creds: Creds) {
       try {
          var response: StatusResult = 'ok';
          const req = URLHelper.buildAuthFetch('login', creds);
-         console.log('Starting Login Attempt');
+         Message.log('Starting Login Attempt');
          const res = await fetch(req.url, req.config);
          if (URLHelper.quickStatusCheck(res.status)) {
             const data = (await res.json()) as LoginResponse;
@@ -264,19 +331,25 @@ class ModelObserver {
                Cookies.set('userId', data.user._id);
                Cookies.set('loggedIn', 'true');
                this.user = data.user;
-               response = await this.fetchUserData();
+               await this.fetchUserData();
+            } else {
+               Message.msg('Login Issue', URLHelper.statusCheck(res.status));
             }
          } else {
             const data = (await res.json()) as MessageResponse;
-            console.log(data.message);
+            Message.msg(data.message, URLHelper.statusCheck(res.status));
          }
          if (response === 'ok') {
             return URLHelper.statusCheck(res.status);
          }
          return response;
       } catch (err) {
-         console.log(err);
-         return 'error';
+         const error = err as Error;
+         if (error.message) {
+            Message.msg(error.message, 'error');
+         } else {
+            Message.msg('Unknown error', 'error');
+         }
       }
    }
 
@@ -286,39 +359,50 @@ class ModelObserver {
       this.updateUserObservers(null);
    }
 
-   static async register(creds: Creds): Promise<StatusResult> {
+   static async register(creds: Creds) {
       try {
          const req = URLHelper.buildAuthFetch('register', creds);
          console.log('Starting Register Attempt');
          const res = await fetch(req.url, req.config);
          if (URLHelper.quickStatusCheck(res.status)) {
+            // TODO - Change the server response to just send a message.
+            //        The userId doesnt need to be sent when done.
             const data = (await res.json()) as RegisterResponse;
             console.log(data);
+            Message.msg(data.message, URLHelper.statusCheck(res.status));
          } else {
             const data = (await res.json()) as MessageResponse;
             console.log(data.message);
+            Message.msg(data.message, URLHelper.statusCheck(res.status));
          }
-         return URLHelper.statusCheck(res.status);
       } catch (err) {
-         console.log(err);
-         return 'error';
+         const error = err as Error;
+         if (error.message) {
+            Message.msg(error.message, 'error');
+         } else {
+            Message.msg('Unknown error', 'error');
+         }
       }
    }
 
-   static async logout(): Promise<StatusResult> {
+   static async logout() {
       try {
          const req = URLHelper.buildAuthFetch('logout');
          console.log('Starting Logout Attempt');
          const res = await fetch(req.url, req.config);
          const data = (await res.json()) as MessageResponse;
-         console.log(data.message);
+         // console.log(data.message);
          if (URLHelper.quickStatusCheck(res.status)) {
             this.postLogout();
          }
-         return URLHelper.statusCheck(res.status);
+         Message.msg(data.message, URLHelper.statusCheck(res.status));
       } catch (err) {
-         console.log(err);
-         return 'error';
+         const error = err as Error;
+         if (error.message) {
+            Message.msg(error.message, 'error');
+         } else {
+            Message.msg('Unknown error', 'error');
+         }
       }
    }
    // #endregion
@@ -369,11 +453,12 @@ class ModelObserver {
 
    private static updateUserObservers(user: UserModel | null) {
       if (this.observers.user) {
-         console.log({
-            user: this.user,
-            parts: this.parts,
-            packages: this.packages
-         });
+         // NOTE - Uncomment to debug Observers:
+         // console.log({
+         //    user: this.user,
+         //    parts: this.parts,
+         //    packages: this.packages
+         // });
          Object.values(this.observers.user).forEach(obs => obs(user));
       }
    }

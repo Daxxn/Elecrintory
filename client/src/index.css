@@ -20,6 +20,11 @@
 
   --valid-input-color: #234996;
   --invalid-input-color: #965123;
+
+  --message-error-color: #70220e;
+  --message-issue-color: #6d4614;
+  --message-unauth-color: #726708;
+  --message-color: #133374;
 }
 
 body {

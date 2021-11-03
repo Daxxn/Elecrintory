@@ -1,7 +1,7 @@
-.base-message-roll-container {
+.message-roll-container {
    display: flex;
    flex-flow: row nowrap;
-   position: absolute;
+   position: sticky;
    bottom: 0;
    left: 0;
    width: 100%;
@@ -12,10 +12,18 @@
    margin: 0.25rem;
 }
 
+.message-ok {
+   background-color: var(--message-color);
+}
+
+.message-unauth {
+   background-color: var(--message-unauth-color);
+}
+
 .message-error {
-   background-color: red;
+   background-color: var(--message-error-color);
 }
 
 .message-issue {
-   background-color: orange;
+   background-color: var(--message-issue-color);
 }

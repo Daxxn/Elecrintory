@@ -28,7 +28,7 @@ export type RegisterResponse = {
    userId: string;
 }
 
-export type UserUpdateResponse = {
+export type UpdatedUserResponse = {
    user: UserModel;
 }
 // #endregion
