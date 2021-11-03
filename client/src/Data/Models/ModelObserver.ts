@@ -272,6 +272,7 @@ class ModelObserver {
          console.log(partId);
          if (URLHelper.quickStatusCheck(res.status)) {
             const data = (await res.json()) as DeletedResponse;
+            console.log(data);
             if (data) {
                this.user = data.user;
                delete this.parts[partId];
@@ -302,6 +303,7 @@ class ModelObserver {
          console.log(packageId);
          if (URLHelper.quickStatusCheck(res.status)) {
             const data = (await res.json()) as DeletedResponse;
+            console.log(data);
             if (data) {
                this.user = data.user;
                delete this.packages[packageId];

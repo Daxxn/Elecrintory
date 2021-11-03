@@ -280,13 +280,38 @@ const buildRoute = () => {
          if (id) {
             if (req.session) {
                if (req.session.userId) {
-                  await Promise.all([
-                     partModel.deleteOne({ _id: id}).exec(),
-                     userModel.updateOne(
-                        { packages: id },
-                        { $pull: { packages: id } }
-                     ).exec(),
-                  ]);
+                  const foundUser = await userModel.findById(req.session.userId);
+                  if (foundUser) {
+                     const { parts } = foundUser;
+                     if (parts.includes(id)) {
+                        const removedParts = parts.filter(p => p != id);
+                        foundUser.parts = removedParts;
+                        const result = await partModel.deleteOne({ _id: id});
+                        if (result.deletedCount === 1) {
+                           const savedUser = await foundUser.save();
+                           res.status(201).json({
+                              id,
+                              user: savedUser,
+                           });
+                        } else if (result.deletedCount > 1) {
+                           res.status(400).json({
+                              message: 'More that one part was found with that ID.',
+                           });
+                        } else {
+                           res.status(400).json({
+                              message: 'Unable to find correct part.',
+                           });
+                        }
+                     } else {
+                        res.status(401).json({
+                           message: 'Part doesnt belong to you.',
+                        });
+                     }
+                  } else {
+                     res.status(400).json({
+                        message: 'Unable to find user.',
+                     });
+                  }
                } else {
                   messageHelper(res, 500, 'noUserSession');
                }

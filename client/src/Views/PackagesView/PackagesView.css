@@ -9,6 +9,7 @@
 .selected-package-container {
    background-color: var(--select-item-color);
    padding: 0.5rem;
+   padding-bottom: 2rem;
    position: sticky;
    bottom: 0;
 }

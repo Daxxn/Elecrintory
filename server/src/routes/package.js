@@ -168,17 +168,39 @@ const buildPackageRoute = () => {
          if (id) {
             if (req.session) {
                if (req.session.userId) {
-                  await Promise.all([
-                     packageModel.deleteOne({ _id: id}).exec(),
-                     partModel.updateMany(
-                        { packages: id },
-                        { $pull: { packages: id } }
-                     ).exec(),
-                     userModel.updateOne(
-                        { packages: id },
-                        { $pull: { packages: id } }
-                     ).exec(),
-                  ]);
+                  const foundUser = await userModel.findById(req.session.userId);
+                  if (foundUser) {
+                     const packages = foundUser.packages;
+                     console.log(packages);
+                     if (packages.includes(id)) {
+                        const removedPackages = packages.filter(p => p != id);
+                        foundUser.packages = removedPackages;
+                        const result = await packageModel.deleteOne({ _id: id});
+                        if (result.deletedCount === 1) {
+                           const savedUser = await foundUser.save();
+                           res.status(201).json({
+                              id,
+                              user: savedUser,
+                           });
+                        } else if (result.deletedCount > 1) {
+                           res.status(400).json({
+                              message: 'More that one part was found with that ID.',
+                           });
+                        } else {
+                           res.status(400).json({
+                              message: 'Unable to find correct part.',
+                           });
+                        }
+                     } else {
+                        res.status(401).json({
+                           message: 'Part doesnt belong to you.',
+                        });
+                     }
+                  } else {
+                     res.status(400).json({
+                        message: 'Unable to find user.',
+                     });
+                  }
                } else {
                   messageHelper(res, 500, 'noUserSession');
                }
@@ -192,6 +214,44 @@ const buildPackageRoute = () => {
          next(err);
       }
    });
+
+   // ! BORKED - Theres a problem with the promise.all()
+   // !          Need to learn more about the updateMany() filter.
+   // router.delete('/:id', async (req, res, next) => {
+   //    try {
+   //       const { id } = req.params;
+   //       if (id) {
+   //          if (req.session) {
+   //             if (req.session.userId) {
+   //                var user = {};
+   //                await Promise.all([
+   //                   packageModel.deleteOne({ _id: id}).exec(),
+   //                   partModel.updateMany(
+   //                      { packages: id },
+   //                      { $pull: { packages: id } }
+   //                   ).exec(),
+   //                   userModel.updateOne(
+   //                      { packages: id },
+   //                      { $pull: { packages: id } }
+   //                   ).exec((err, result) => user = result),
+   //                ]);
+   //                res.status(201).json({
+   //                   id,
+   //                   user,
+   //                });
+   //             } else {
+   //                messageHelper(res, 500, 'noUserSession');
+   //             }
+   //          } else {
+   //             messageHelper(res, 500, 'noSession');
+   //          }
+   //       } else {
+   //          messageHelper(res, 400, 'noId');
+   //       }
+   //    } catch (err) {
+   //       next(err);
+   //    }
+   // });
    // #endregion
    return router;
 };
