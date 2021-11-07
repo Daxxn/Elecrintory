@@ -1,0 +1,20 @@
+.item-cont {
+   display: flex;
+   flex-flow: row nowrap;
+   align-items: center;
+   align-content: center;
+   justify-content: space-evenly;
+}
+
+.item-label {
+   align-content: flex-end;
+}
+
+.item-value {
+   text-align: left;
+}
+
+.item-check {
+   align-self: center;
+   justify-self: center;
+}

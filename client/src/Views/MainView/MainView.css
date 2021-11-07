@@ -2,3 +2,17 @@
    background-color: var(--background-color);
    text-align: left;
 }
+
+.view-controls-cont {
+   display: flex;
+   flex-flow: column nowrap;
+   align-content: stretch;
+}
+
+.view-sel-button {
+   align-self: stretch;
+}
+
+.selected-button {
+   background-color: var(--selected-button-color);
+}
