@@ -86,6 +86,10 @@ button {
   padding: 0.25rem;
 }
 
+button .disabled-button {
+  opacity: 0.5;
+}
+
 input {
   all: unset;
   border-radius: 0.15rem;

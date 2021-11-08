@@ -1,7 +1,9 @@
 const express = require('express');
-const userModel = require('../models/users');
 const bCrypt = require('bcrypt');
 const { messageHelper } = require('../utils/messageHelper');
+const userModel = require('../models/users');
+const partModel = require('../models/parts');
+const packageModel = require('../models/packages');
 
 const buildRoute = () => {
   const router = express.Router();
@@ -26,6 +28,10 @@ const buildRoute = () => {
               // res.redirect(`/api/user/${user._id}`);
               res.status(200).json({
                 user,
+              });
+            } else {
+              res.status(401).json({
+                message: 'Username or Password doesnt match.',
               });
             }
           } else {
@@ -52,7 +58,14 @@ const buildRoute = () => {
             if (await bCrypt.compare(body.password, user.hash)) {
               req.session.userId = user._id;
               req.session.save();
-              res.redirect(`/api/user/${user._id}`);
+              // res.redirect(`/api/user/${user._id}`);
+              res.status(200).json({
+                user,
+              });
+            } else {
+              res.status(401).json({
+                message: 'Username or Password doesnt match.',
+              });
             }
           } else {
             res.status(401).json({
@@ -75,9 +88,18 @@ const buildRoute = () => {
       if (req.session) {
         if (req.session.userId) {
           req.session.userId = null;
+          req.session.save();
           res.status(200).json({
             message: 'user logged out.',
           });
+          // req.session.destroy((err) => {
+          //   if (err) {
+          //     throw err;
+          //   }
+          //   res.status(200).json({
+          //     message: 'user logged out.',
+          //   });
+          // });
         }
       } else {
         res.status(400).json({
@@ -137,13 +159,37 @@ const buildRoute = () => {
     }
   });
 
-  router.post('/unregister', async (req, res, next) => {
+  router.get('/unregister', async (req, res, next) => {
     try {
       if (req.session) {
         if (req.session.userId) {
           const foundUser = await userModel.findById(req.session.userId);
           if (foundUser) {
-            const foundParts = await partModel;
+            const removedParts = await partModel.deleteMany({
+              _id: { $in: foundUser.parts },
+            });
+            const removedPacks = await packageModel.deleteMany({
+              _id: { $in: foundUser.packages },
+            });
+
+            await userModel.deleteOne({ _id: foundUser._id });
+            req.session.userId = null;
+            req.session.save();
+            // req.session.destroy((err) => {
+            //   if (err) {
+            //     throw err;
+            //   }
+            //   res.status(200).json({
+            //     message: 'user logged out.',
+            //   });
+            // });
+
+            res.status(201).json({
+              message: 'Deleted User',
+              success: true,
+              remParts: removedParts.deletedCount,
+              remPackages: removedPacks.deletedCount,
+            });
           } else {
             res.status(400).json({
               message: 'User not found.',

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { PackageModel } from '../../Data/Models/DataModels';
 import UserModel from '../../Data/Models/UserModel';
+import CalculatorsView from '../CalculatorsView';
 import PackagesView from '../PackagesView';
 import PartsList from '../PartsList';
 import SearchView from '../SearchView';
@@ -60,6 +61,14 @@ const MainView = (props: MainViewProps): JSX.Element => {
                      }`}
                      onClick={() => setIndex(3)}
                   >
+                     Calc
+                  </button>
+                  <button
+                     className={`view-sel-button ${
+                        index === 4 ? 'selected-button' : ''
+                     }`}
+                     onClick={() => setIndex(4)}
+                  >
                      Profile
                   </button>
                </div>
@@ -97,6 +106,14 @@ const MainView = (props: MainViewProps): JSX.Element => {
                   ''
                )}
                {index === 3 ? (
+                  <div>
+                     <h2>Calc</h2>
+                     <CalculatorsView />
+                  </div>
+               ) : (
+                  ''
+               )}
+               {index === 4 ? (
                   <div>
                      <h2>User Profile</h2>
                      <UserProfileView user={user} />

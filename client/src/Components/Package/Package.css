@@ -3,12 +3,16 @@
    border: var(--border-color) solid 3px;
    border-spacing: 1rem;
    border-radius: 0.25rem;
+   display: flex;
+   flex-flow: column nowrap;
 }
 
 .select-item-button {
    all: unset;
    background-color: transparent;
    padding: 2rem;
+   display: flex;
+   flex-flow: column nowrap;
 }
 
 .select-item-button:hover {

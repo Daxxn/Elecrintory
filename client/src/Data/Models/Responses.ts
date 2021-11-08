@@ -31,6 +31,8 @@ export type RegisterResponse = {
 export type UnregisterResponse = {
    message: string;
    success: boolean;
+   remParts: number | null;
+   remPackages: number | null;
 };
 
 export type UpdatedUserResponse = {

@@ -120,7 +120,7 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
                <div className="item-container">
                   <p>Package Name</p>
                   <input
-                     className=""
+                     className={selectedPackage.name ? '' : 'invalid-input'}
                      id="name-input"
                      onChange={e => handleNameChange(e.target.value)}
                      value={selectedPackage.name}
@@ -129,7 +129,7 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
                <div className="item-container">
                   <p>Package ID</p>
                   <input
-                     className=""
+                     className={selectedPackage.packageId ? '' : 'invalid-input'}
                      id="id-input"
                      onChange={e => handleIDChange(e.target.value)}
                      value={selectedPackage.packageId}
@@ -164,7 +164,7 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
                <div className="item-container">
                   <p>Package Name</p>
                   <input
-                     className=""
+                     className={newPackage.name ? '' : 'invalid-input'}
                      id="name-input"
                      onChange={e => handleNameInput(e.target.value)}
                      value={newPackage.name}
@@ -173,7 +173,7 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
                <div className="item-container">
                   <p>Package ID</p>
                   <input
-                     className=""
+                     className={newPackage.packageId ? '' : 'invalid-input'}
                      id="id-input"
                      onChange={e => handleIDInput(e.target.value)}
                      value={newPackage.packageId}

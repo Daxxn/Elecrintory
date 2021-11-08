@@ -4,6 +4,7 @@ import { PackageModel } from '../../Data/Models/DataModels';
 import ModelObserver from '../../Data/Models/ModelObserver';
 import SelectedPackageView from './SelectedPackageView';
 import './PackagesView.css';
+import Message from '../../Data/Utils/Message';
 
 interface PackagesViewProps {
    selectedPackage: PackageModel | null;
@@ -11,10 +12,7 @@ interface PackagesViewProps {
 }
 
 const PackagesView = (props: PackagesViewProps): JSX.Element => {
-   const {
-      selectedPackage,
-      handleSetSelectedPackage,
-   } = props;
+   const { selectedPackage, handleSetSelectedPackage } = props;
    const packages = ModelObserver.getPackageCollection();
 
    // #region Input Handling
@@ -68,11 +66,20 @@ const PackagesView = (props: PackagesViewProps): JSX.Element => {
    };
 
    const handleCreatePackage = async (pack: PackageModel) => {
-      await ModelObserver.newPackage(pack);
+      console.log('Create Package');
+      if (pack.name !== '' && pack.packageId !== '') {
+         await ModelObserver.newPackage(pack);
+      } else {
+         Message.msg('Cannot create. Invalid properties.', 'error');
+      }
    };
 
    const handleSavePackage = async (pack: PackageModel) => {
-      await ModelObserver.updatePackage(pack);
+      if (pack.name !== '' && pack.packageId !== '') {
+         await ModelObserver.updatePackage(pack);
+      } else {
+         Message.msg('Cannot save. Invalid properties.', 'error');
+      }
    };
 
    const handleDeletePackage = async () => {
@@ -80,7 +87,7 @@ const PackagesView = (props: PackagesViewProps): JSX.Element => {
          await ModelObserver.deletePackage(selectedPackage._id);
       }
    };
-   
+
    return (
       <div className="base-packages-view">
          <div className="package-list-container">
@@ -106,7 +113,6 @@ const PackagesView = (props: PackagesViewProps): JSX.Element => {
                handleIDChange={handleIDChange}
                handleLeadChange={handleLeadsChange}
                handleDescChange={handleDescChange}
-
                handleCreatePackage={handleCreatePackage}
                handleSavePackage={handleSavePackage}
                handleClearPackage={handleClearPackage}

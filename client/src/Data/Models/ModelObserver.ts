@@ -494,13 +494,11 @@ class ModelObserver {
       }
    }
 
-   private static postLogout() {
-      this.user = null;
-      this.parts = {};
-      this.updateUserObservers(null);
-   }
-
    static async register(creds: Creds) {
+      if (this.user) {
+         Message.msg('A user is logged in. logout first!', 'error');
+         return;
+      }
       try {
          const req = URLHelper.buildAuthFetch('register', creds);
          console.log('Starting Register Attempt');
@@ -534,10 +532,14 @@ class ModelObserver {
                const res = await fetch(req.url, req.config);
                if (URLHelper.quickStatusCheck(res.status) && res.status === 201) {
                   const data = (await res.json()) as UnregisterResponse;
+                  console.log(data);
                   if (data.success) {
                      this.user = null;
                      this.parts = {};
                      this.packages = {};
+                     Cookies.set('loggedIn', 'false');
+                     Cookies.remove('userId');
+                     Cookies.remove('connect.sid');
                      this.updateUserObservers(null);
                   }
                   Message.response(data.message, res.status);
@@ -562,6 +564,16 @@ class ModelObserver {
       } else {
          Message.msg('No user logged in... Unknown Error', 'error');
       }
+   }
+
+   private static postLogout() {
+      console.log('In Post Logout.');
+      this.user = null;
+      this.parts = {};
+      Cookies.set('loggedIn', 'false');
+      Cookies.remove('userId');
+      Cookies.remove('connect.sid');
+      this.updateUserObservers(null);
    }
 
    static async logout() {

@@ -4,14 +4,16 @@ import './AddPackageButton.css';
 
 export interface AddPackageButtonProps {
    handleCreate: () => void;
+   disabled?: boolean;
 }
 
 const AddPackageButton = (props: AddPackageButtonProps): JSX.Element => {
-   const { handleCreate } = props;
+   const { handleCreate, disabled } = props;
 
    return (
       <button
-         className="add-package-button"
+         className={`add-package-button ${disabled ? 'disabled-button' : ''}`}
+         disabled={disabled}
          type="button"
          onClick={handleCreate}
       >
