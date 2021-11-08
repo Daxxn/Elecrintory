@@ -1,0 +1,4 @@
+.part-cont {
+   display: flex;
+   flex-flow: column nowrap;
+}

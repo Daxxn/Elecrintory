@@ -1,0 +1,23 @@
+.search-cont {
+   display: block;
+   position: relative;
+}
+
+.search-field {
+   width: 100%;
+   background-color: var(--input-color);
+}
+
+.search-button {
+   border-radius: 0 5% 5% 0;
+}
+
+.clear-button {
+   background-color: transparent;
+}
+
+.button-cont {
+   position: absolute;
+   right: 0;
+   top: 0;
+}

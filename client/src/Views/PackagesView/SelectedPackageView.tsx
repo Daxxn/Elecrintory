@@ -9,7 +9,7 @@ const blankPackage = {
    name: '',
    packageId: '',
    _id: '',
-   __v: 0
+   __v: 0,
 };
 
 export interface SelectedPackageViewProps {
@@ -38,7 +38,9 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
       handleClearPackage,
       handleDeletePackage,
    } = props;
-   const [leadState, setLeadState] = useState<string>(selectedPackage ? selectedPackage.leads.toString() : '0');
+   const [leadState, setLeadState] = useState<string>(
+      selectedPackage ? selectedPackage.leads.toString() : '0'
+   );
    const [newLeadState, setNewLeadState] = useState<string>('0');
    const [newPackage, setNewPackage] = useState<PackageModel>(blankPackage);
 
@@ -120,7 +122,7 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
                   <input
                      className=""
                      id="name-input"
-                     onChange={(e) => handleNameChange(e.target.value)}
+                     onChange={e => handleNameChange(e.target.value)}
                      value={selectedPackage.name}
                   />
                </div>
@@ -129,7 +131,7 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
                   <input
                      className=""
                      id="id-input"
-                     onChange={(e) => handleIDChange(e.target.value)}
+                     onChange={e => handleIDChange(e.target.value)}
                      value={selectedPackage.packageId}
                   />
                </div>
@@ -141,7 +143,7 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
                      type="number"
                      min="0"
                      max="1000"
-                     onChange={(e) => handleLeadStateChange(e.target.value)}
+                     onChange={e => handleLeadStateChange(e.target.value)}
                      value={leadState}
                   />
                </div>
@@ -151,7 +153,7 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
                      className=""
                      id="desc-input"
                      placeholder="Description"
-                     onChange={(e) => handleDescChange(e.target.value)}
+                     onChange={e => handleDescChange(e.target.value)}
                      value={selectedPackage.desc}
                   />
                </div>
@@ -164,7 +166,7 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
                   <input
                      className=""
                      id="name-input"
-                     onChange={(e) => handleNameInput(e.target.value)}
+                     onChange={e => handleNameInput(e.target.value)}
                      value={newPackage.name}
                   />
                </div>
@@ -173,7 +175,7 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
                   <input
                      className=""
                      id="id-input"
-                     onChange={(e) => handleIDInput(e.target.value)}
+                     onChange={e => handleIDInput(e.target.value)}
                      value={newPackage.packageId}
                   />
                </div>
@@ -185,7 +187,7 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
                      type="number"
                      min="0"
                      max="1000"
-                     onChange={(e) => handleLeadsInput(e.target.value)}
+                     onChange={e => handleLeadsInput(e.target.value)}
                      value={newLeadState}
                   />
                </div>
@@ -195,13 +197,13 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
                      className=""
                      id="desc-input"
                      placeholder="Description"
-                     onChange={(e) => handleDescInput(e.target.value)}
+                     onChange={e => handleDescInput(e.target.value)}
                      value={newPackage.desc}
                   />
                </div>
             </div>
          )}
-         
+
          <PackageControls
             packageSelected={selectedPackage !== null}
             handleAddPackage={handleCreate}

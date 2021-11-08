@@ -1,4 +1,5 @@
 import { BaseModel } from "./DataModels";
+import SettingsModel from "./SettingsModel";
 
 export type Creds = {
    username: string;
@@ -9,6 +10,7 @@ interface UserModel extends BaseModel {
    username: string;
    parts: string[];
    packages: string[];
+   settings: SettingsModel;
 }
 
 class UserModel {

@@ -1,0 +1,11 @@
+{
+   "arrowParens": "avoid",
+   "singleQuote": true,
+   "tabWidth": 3,
+   "printWidth": 84,
+   "trailingComma": "es5",
+   "jsxSingleQuote": false,
+   "bracketSpacing": true,
+   "bracketSameLine": false,
+   "endOfLine": "lf"
+}

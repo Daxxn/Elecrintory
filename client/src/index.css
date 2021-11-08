@@ -9,6 +9,7 @@
   --text-color: white;
   --foreground-color: #2d3950;
   --button-color: #203050;
+  --combo-item-color: #273e6d;
   --input-color: #253b66;
   --input-hover-color: #2b467c;
   --header-color: #1a263f;
@@ -18,6 +19,7 @@
   --selected-color: #424e66;
   --select-item-color: #2e333f;
   --selected-button-color: #1f396e;
+  --combo-modal-back-color: #242a36;
 
   --valid-color: #147e8b;
   --invalid-color: #992916;
@@ -44,7 +46,6 @@ code {
   font-family: 'Fira-Code', source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
 
 .icon-button {
   padding: 0;
@@ -79,7 +80,7 @@ button {
   all: unset;
   background-color: var(--button-color);
   color: var(--text-color);
-  border-radius: 0.25rem;
+  border-radius: 6%;
   transition: background-color 200ms ease-in;
   text-align: center;
   padding: 0.25rem;

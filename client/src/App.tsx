@@ -68,13 +68,6 @@ function App() {
     setCreds(creds);
   }
 
-  // NOTE Trying to use the ModelObserver to update the part instead
-  // NOTE of the callback nightmare. It may not work as intended tho.
-  // const handleAddSelectedPackage = (packageId: string) => {
-
-  // }
-  // #endregion
-
   return (
     <div className="App">
         <TitleCard

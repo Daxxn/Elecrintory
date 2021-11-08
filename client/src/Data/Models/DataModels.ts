@@ -2,6 +2,15 @@ export type PartCollection = {
    [id: string]: PartModel;
 };
 
+export type PartSearchProps =
+   | 'partName'
+   | 'manufacturer'
+   | 'inventory'
+   | 'ordered'
+   | 'tags';
+
+export type PackageSearchProps = 'name' | 'packageId' | 'leads';
+
 export type PackageCollection = {
    [id: string]: PackageModel;
 };

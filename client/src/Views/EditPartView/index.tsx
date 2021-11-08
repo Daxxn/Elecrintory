@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PartModel from '../../Data/Models/DataModels';
 import ModelObserver from '../../Data/Models/ModelObserver';
 import './EditPartView.css';
@@ -25,15 +25,6 @@ const EditPartView = (props: EditPartViewProps): JSX.Element => {
    const { partId, handleCloseEdit } = props;
    const foundPart = ModelObserver.getPart(partId);
    const [part, setPart] = useState<PartModel>(foundPart ?? blankPart);
-
-   // useEffect(() => {
-   //    ModelObserver.addPartObserver(partId, `part-edit-comp-${partId}`, (updatedPart) => {
-   //       setPart(updatedPart as PartModel);
-   //    });
-   //    return () => {
-   //       ModelObserver.removePartObserver(partId, `part-edit-comp-${partId}`);
-   //    };
-   // });
 
    const datasheetLinkChange = (url: string) => {
       setPart({

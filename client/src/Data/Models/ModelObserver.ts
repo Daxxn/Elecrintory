@@ -1,9 +1,27 @@
-import PartModel, { PackageCollection, PackageModel, PartCollection } from "./DataModels";
-import UserModel, { Creds } from "./UserModel";
+import PartModel, {
+   PackageCollection,
+   PackageModel,
+   PackageSearchProps,
+   PartCollection,
+   PartSearchProps,
+} from './DataModels';
+import UserModel, { Creds } from './UserModel';
 import URLHelper, { StatusResult } from '../Utils/urlHelper';
-import { DeletedResponse, LoginResponse, MessageResponse, NewPackageResponse, NewPartResponse, RegisterResponse, UpdatedPackageResponse, UpdatedPartResponse, UpdatedUserResponse, UserDataResponse } from './Responses';
+import {
+   DeletedResponse,
+   LoginResponse,
+   MessageResponse,
+   NewPackageResponse,
+   NewPartResponse,
+   RegisterResponse,
+   UpdatedPackageResponse,
+   UpdatedPartResponse,
+   UpdatedUserResponse,
+   UserDataResponse,
+} from './Responses';
 import Cookies from 'js-cookie';
-import Message from "../Utils/Message";
+import Message from '../Utils/Message';
+import SettingsModel from './SettingsModel';
 
 type UserCallback = (user: UserModel | null) => void;
 type PartCallback = (part: PartModel | PartCollection) => void;
@@ -12,18 +30,18 @@ type PackageCallback = (part: PackageModel | PackageCollection) => void;
 type Observers = {
    user: {
       [id: string]: UserCallback;
-   },
+   };
    parts: {
       [partId: string]: {
          [obsId: string]: PartCallback;
-      }
-   },
+      };
+   };
    packages: {
       [packageId: string]: {
          [obsId: string]: PackageCallback;
-      }
-   }
-}
+      };
+   };
+};
 
 class ModelObserver {
    // #region Props
@@ -50,6 +68,13 @@ class ModelObserver {
       this.updateUserObservers(user);
    }
 
+   static async setUserSettings(settings: SettingsModel) {
+      if (this.user) {
+         this.user.settings = settings;
+         await this.updateUser();
+      }
+   }
+
    static getPartCollection() {
       return this.parts;
    }
@@ -72,7 +97,7 @@ class ModelObserver {
       return null;
    }
    // #endregion
-   
+
    // #region Set Methods
    static setPackageCollection(packages: PackageCollection) {
       this.packages = packages;
@@ -83,7 +108,7 @@ class ModelObserver {
       this.parts = parts;
       this.updateUserObservers(this.user);
    }
-   
+
    static setPart(part: PartModel) {
       this.parts[part._id] = part;
       this.updatePartObservers(part);
@@ -104,12 +129,82 @@ class ModelObserver {
    }
    // #endregion
 
+   // #region Search Methods
+   static searchParts(prop: PartSearchProps, value: string): string[] | null {
+      if (this.parts) {
+         switch (prop) {
+            case 'partName':
+               var foundParts = Object.values(this.parts).filter(part =>
+                  part.partName.includes(value)
+               );
+               return foundParts.map(p => p._id);
+            case 'manufacturer':
+               foundParts = Object.values(this.parts).filter(part =>
+                  part.manufacturer.includes(value)
+               );
+               return foundParts.map(p => p._id);
+            case 'inventory':
+               var num = parseInt(value);
+               foundParts = Object.values(this.parts).filter(
+                  part => part.inventory === num
+               );
+               return foundParts.map(p => p._id);
+            case 'ordered':
+               num = parseInt(value);
+               foundParts = Object.values(this.parts).filter(
+                  part => part.ordered === num
+               );
+               return foundParts.map(p => p._id);
+            case 'tags':
+               foundParts = Object.values(this.parts).filter(part =>
+                  part.tags.includes(value)
+               );
+               return foundParts.map(p => p._id);
+            default:
+               return null;
+         }
+      }
+      return null;
+   }
+
+   static searchPackages(prop: PackageSearchProps, value: string): string[] | null {
+      if (this.packages) {
+         switch (prop) {
+            case 'name':
+               var foundPackages = Object.values(this.packages).filter(pck =>
+                  pck.name.includes(value)
+               );
+               return foundPackages.map(p => p._id);
+            case 'packageId':
+               foundPackages = Object.values(this.packages).filter(pck =>
+                  pck.packageId.includes(value)
+               );
+               return foundPackages.map(p => p._id);
+            case 'leads':
+               const num = parseInt(value);
+               foundPackages = Object.values(this.packages).filter(
+                  pck => pck.leads === num
+               );
+               return foundPackages.map(p => p._id);
+            default:
+               return null;
+         }
+      }
+      return null;
+   }
+   // #endregion
+
    // #region Server Call Methods
    // #region Update Methods
    private static async updateUser() {
       try {
          Message.log('Updating User...');
-         const req = URLHelper.buildDataFetch('user', 'PATCH', undefined, this.user);
+         const req = URLHelper.buildDataFetch(
+            'user',
+            'PATCH',
+            undefined,
+            this.user
+         );
          const res = await fetch(req.url, req.config);
          if (URLHelper.quickStatusCheck(res.status)) {
             const data = (await res.json()) as UpdatedUserResponse;
@@ -189,7 +284,10 @@ class ModelObserver {
                const data = (await res.json()) as UserDataResponse;
                this.parts = data.parts;
                this.packages = data.packages;
-               Message.msg('User Login and setup Complete', URLHelper.statusCheck(res.status));
+               Message.msg(
+                  'User Login and setup Complete',
+                  URLHelper.statusCheck(res.status)
+               );
                this.updateUserObservers(this.user);
             } else {
                const data = (await res.json()) as MessageResponse;
@@ -329,7 +427,8 @@ class ModelObserver {
 
    static async autoLogin() {
       try {
-         Message.log('Attempting Auto-Login...');
+         // ! Keeps locking up...
+         // Message.log('Attempting Auto-Login...');
          const userId = Cookies.get('userId');
          const loggedIn = Cookies.get('loggedIn');
          if (userId && loggedIn === 'true') {
@@ -448,7 +547,7 @@ class ModelObserver {
    }
    // #endregion
    // #endregion
-   
+
    // #region Observer Methods
    static addUserObserver(id: string, callback: UserCallback) {
       this.observers.user[id] = callback;
@@ -463,7 +562,11 @@ class ModelObserver {
       }
    }
 
-   static addPackageObserver(packageId: string, obsId: string, callback: PackageCallback) {
+   static addPackageObserver(
+      packageId: string,
+      obsId: string,
+      callback: PackageCallback
+   ) {
       if (packageId) {
          if (!this.observers.packages[packageId]) {
             this.observers.packages[packageId] = {};
@@ -515,7 +618,9 @@ class ModelObserver {
    private static updatePackageObservers(packageItem: PackageModel) {
       if (this.observers.packages) {
          if (this.observers.packages[packageItem._id]) {
-            Object.values(this.observers.packages[packageItem._id]).forEach(obs => obs(packageItem));
+            Object.values(this.observers.packages[packageItem._id]).forEach(obs =>
+               obs(packageItem)
+            );
          }
       }
    }

@@ -17,10 +17,8 @@ const TitleCard = (props: TitleCardProps): JSX.Element => {
 
    return (
       <div className="base-title-card">
-         <h2>Parts Inventory</h2>
-         {user ? (
-            <h2>{user.username}</h2>
-         ) : ''}
+         <h2>Electrintory</h2>
+         {user ? <h2>{user.username}</h2> : ''}
          <UserButton
             user={user}
             creds={creds}

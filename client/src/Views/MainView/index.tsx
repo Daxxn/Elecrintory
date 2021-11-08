@@ -3,6 +3,7 @@ import { PackageModel } from '../../Data/Models/DataModels';
 import UserModel from '../../Data/Models/UserModel';
 import PackagesView from '../PackagesView';
 import PartsList from '../PartsList';
+import SearchView from '../SearchView';
 import UserProfileView from '../UserProfileView';
 import './MainView.css';
 
@@ -22,7 +23,7 @@ const MainView = (props: MainViewProps): JSX.Element => {
       handleSelectTag,
       handleSetSelectedPackage,
    } = props;
-   const [index, setIndex] = useState<number>(0);
+   const [index, setIndex] = useState<number>(user ? user.settings.openingView : 0);
 
    return (
       <div className="base-main-view">
@@ -30,20 +31,34 @@ const MainView = (props: MainViewProps): JSX.Element => {
             <div>
                <div className="view-controls-cont">
                   <button
-                     className={`view-sel-button ${index === 0 ? 'selected-button' : ''}`}
+                     className={`view-sel-button ${
+                        index === 0 ? 'selected-button' : ''
+                     }`}
                      onClick={() => setIndex(0)}
                   >
                      Parts
                   </button>
                   <button
-                     className={`view-sel-button ${index === 1 ? 'selected-button' : ''}`}
+                     className={`view-sel-button ${
+                        index === 1 ? 'selected-button' : ''
+                     }`}
                      onClick={() => setIndex(1)}
                   >
                      Packages
                   </button>
                   <button
-                     className={`view-sel-button ${index === 2 ? 'selected-button' : ''}`}
+                     className={`view-sel-button ${
+                        index === 2 ? 'selected-button' : ''
+                     }`}
                      onClick={() => setIndex(2)}
+                  >
+                     Search
+                  </button>
+                  <button
+                     className={`view-sel-button ${
+                        index === 3 ? 'selected-button' : ''
+                     }`}
+                     onClick={() => setIndex(3)}
                   >
                      Profile
                   </button>
@@ -53,11 +68,15 @@ const MainView = (props: MainViewProps): JSX.Element => {
                      <h2>Parts</h2>
                      <PartsList
                         parts={user.parts}
-                        selectedPackageId={selectedPackage ? selectedPackage._id : null}
+                        selectedPackageId={
+                           selectedPackage ? selectedPackage._id : null
+                        }
                         handleSelectTag={handleSelectTag}
                      />
                   </div>
-               ) : ''}
+               ) : (
+                  ''
+               )}
                {index === 1 ? (
                   <div>
                      <h2>Packages</h2>
@@ -66,13 +85,25 @@ const MainView = (props: MainViewProps): JSX.Element => {
                         handleSetSelectedPackage={handleSetSelectedPackage}
                      />
                   </div>
-               ) : ''}
+               ) : (
+                  ''
+               )}
                {index === 2 ? (
+                  <div>
+                     <h2>Search</h2>
+                     <SearchView user={user} selectedTag={selectedTag} />
+                  </div>
+               ) : (
+                  ''
+               )}
+               {index === 3 ? (
                   <div>
                      <h2>User Profile</h2>
                      <UserProfileView user={user} />
                   </div>
-               ) : ''}
+               ) : (
+                  ''
+               )}
             </div>
          ) : (
             <p>No User</p>
