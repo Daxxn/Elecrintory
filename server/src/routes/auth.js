@@ -89,12 +89,12 @@ const buildRoute = () => {
       }
    });
 
-   router.post('/register', async (req, res, next) => {
+   router.post("/register", async (req, res, next) => {
       try {
          if (req.session) {
-            if (req. session.userId) {
+            if (req.session.userId) {
                res.status(401).json({
-                  message: 'user is logged in.',
+                  message: "user is logged in.",
                });
             }
          }
@@ -114,28 +114,55 @@ const buildRoute = () => {
                   });
                   const savedUser = await newUser.save();
                   res.status(201).json({
-                     message: 'user created.',
+                     message: "user created.",
                      userId: savedUser._id,
                   });
                } else {
                   res.status(400).json({
-                     message: 'user already exists.',
+                     message: "user already exists.",
                   });
                }
             } else {
                res.status(400).json({
-                  message: 'No username or password.',
+                  message: "No username or password.",
                });
             }
          } else {
             res.status(400).json({
-               message: 'No Body.',
+               message: "No Body.",
             });
          }
       } catch (err) {
          next(err);
       }
-   })
+   });
+
+   router.post("/unregister", async (req, res, next) => {
+      try {
+         if (req.session) {
+            if (req.session.userId) {
+               const foundUser = await userModel.findById(req.session.userId);
+               if (foundUser) {
+                  const foundParts = await partModel;
+               } else {
+                  res.status(400).json({
+                     message: "User not found.",
+                  });
+               }
+            } else {
+               res.status(500).json({
+                  message: "No User Session.",
+               });
+            }
+         } else {
+            res.status(500).json({
+               message: "No session.",
+            });
+         }
+      } catch (err) {
+         next(err);
+      }
+   });
    // #endregion
 
    return router;

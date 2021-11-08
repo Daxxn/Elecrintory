@@ -28,6 +28,11 @@ export type RegisterResponse = {
    userId: string;
 }
 
+export type UnregisterResponse = {
+   message: string;
+   success: boolean;
+};
+
 export type UpdatedUserResponse = {
    user: UserModel;
 }

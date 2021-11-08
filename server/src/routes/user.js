@@ -99,7 +99,44 @@ const buildRoute = () => {
    // #endregion
 
    // #region DELETE
-   // TODO - Need to decide how im going to handle delete
+   router.post('/unregister', async (req, res, next) => {
+     try {
+       if (req.session) {
+         if (req.session.userId) {
+           const foundUser = await userModel.findById(req.session.userId);
+           if (foundUser) {
+             const removedParts = await partModel.deleteMany({
+               _id: { $in: foundUser.parts },
+             });
+             const removedPacks = await packageModel.deleteMany({
+               _id: { $in: foundUser.packages },
+             });
+
+             res.status(201).json({
+               message: 'Deleted User',
+               success: true,
+               remParts: removedParts.deletedCount,
+               remPackages: removedPacks.deletedCount,
+             });
+           } else {
+             res.status(400).json({
+               message: 'No User Found.',
+             });
+           }
+         } else {
+           res.status(400).json({
+             message: 'No User Session.',
+           });
+         }
+       } else {
+         res.status(400).json({
+           message: 'No Session.',
+         });
+       }
+     } catch (err) {
+       next(err);
+     }
+   });
    // #endregion
 
    return router;

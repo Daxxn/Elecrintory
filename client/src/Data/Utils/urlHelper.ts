@@ -2,7 +2,7 @@ import { Creds } from "../Models/UserModel";
 
 type APIEndpoint = 'user' | 'parts' | 'packages';
 type Method = 'GET' | 'POST' | 'PATCH' | 'DELETE';
-type AuthEndpoint = 'login' | 'logout' | 'register';
+type AuthEndpoint = 'login' | 'logout' | 'register' | 'unregister';
 
 export type StatusResult = 'ok' | 'issue' | 'error' | 'unauth';
 

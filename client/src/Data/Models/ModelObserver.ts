@@ -14,6 +14,7 @@ import {
    NewPackageResponse,
    NewPartResponse,
    RegisterResponse,
+   UnregisterResponse,
    UpdatedPackageResponse,
    UpdatedPartResponse,
    UpdatedUserResponse,
@@ -509,11 +510,11 @@ class ModelObserver {
             //        The userId doesnt need to be sent when done.
             const data = (await res.json()) as RegisterResponse;
             console.log(data);
-            Message.msg(data.message, URLHelper.statusCheck(res.status));
+            Message.response(data.message, res.status);
          } else {
             const data = (await res.json()) as MessageResponse;
             console.log(data.message);
-            Message.msg(data.message, URLHelper.statusCheck(res.status));
+            Message.response(data.message, res.status);
          }
       } catch (err) {
          const error = err as Error;
@@ -522,6 +523,44 @@ class ModelObserver {
          } else {
             Message.msg('Unknown error', 'error');
          }
+      }
+   }
+
+   static async unregister(confUsername: string) {
+      if (this.user) {
+         if (confUsername === this.user.username) {
+            try {
+               const req = URLHelper.buildAuthFetch('unregister');
+               const res = await fetch(req.url, req.config);
+               if (URLHelper.quickStatusCheck(res.status) && res.status === 201) {
+                  const data = (await res.json()) as UnregisterResponse;
+                  if (data.success) {
+                     this.user = null;
+                     this.parts = {};
+                     this.packages = {};
+                     this.updateUserObservers(null);
+                  }
+                  Message.response(data.message, res.status);
+               } else {
+                  const data = (await res.json()) as MessageResponse;
+                  Message.response(data.message, res.status);
+               }
+            } catch (err) {
+               const error = err as Error;
+               if (error.message) {
+                  Message.msg(error.message, 'error');
+               } else {
+                  Message.msg('Unknown error', 'error');
+               }
+            }
+         } else {
+            Message.msg(
+               'Username did not match. Be careful. This deletes EVERYTHING!',
+               'error'
+            );
+         }
+      } else {
+         Message.msg('No user logged in... Unknown Error', 'error');
       }
    }
 

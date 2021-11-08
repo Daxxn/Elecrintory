@@ -5,7 +5,9 @@ import ModelObserver from '../../Data/Models/ModelObserver';
 import SettingsModel from '../../Data/Models/SettingsModel';
 import UserModel from '../../Data/Models/UserModel';
 import EditSettings from './EditSettings';
+import DeleteButton from '../../Components/DeleteButton';
 import './UserProfileView.css';
+import Message from '../../Data/Utils/Message';
 
 export interface UserProfileViewProps {
    user: UserModel | null;
@@ -24,11 +26,21 @@ const UserProfileView = (props: UserProfileViewProps): JSX.Element => {
       setEditMode(false);
    };
 
+   const handleConfirmDeleteUser = async () => {
+      const confirmedUsername = window.prompt('Confirm your username:');
+      if (confirmedUsername) {
+         await ModelObserver.unregister(confirmedUsername);
+      } else {
+         Message.msg('No username was provided. BE CAREFULL!!', 'error');
+      }
+   };
+
    return user ? (
       <div className="base-user-profile-cont">
          <Item label="username" type="str" value={user.username} />
          <Item label="Total Parts" type="num" value={user.parts.length} />
          <Item label="Total Packages" type="num" value={user.packages.length} />
+         <DeleteButton handleDelete={handleConfirmDeleteUser} />
          <div className="settings-cont">
             <h3>Settings</h3>
             <Expander>
