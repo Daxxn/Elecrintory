@@ -1,4 +1,4 @@
-const { Mongoose, Model, Document } = require("mongoose");
+const { Mongoose, Model, Document } = require('mongoose');
 
 /**
  * Converts an array to an object with keys.
@@ -6,14 +6,14 @@ const { Mongoose, Model, Document } = require("mongoose");
  * @returns {Model[]} Model data object with ids as keys.
  */
 function listToDict(data) {
-   if (data.length <= 0) {
-      return data;
-   }
-   output = {};
-   data.forEach(d => {
-      output[d._id] = d;
-   });
-   return output;
+  if (data.length <= 0) {
+    return data;
+  }
+  output = {};
+  data.forEach((d) => {
+    output[d._id] = d;
+  });
+  return output;
 }
 
 /**
@@ -23,15 +23,15 @@ function listToDict(data) {
  * @returns {Document[]|null} all docs that match.
  */
 async function findList(model, ids) {
-   if (ids.length > 0) {
-      const docs = await model.find({
-         _id: {
-            $in: ids,
-         }
-      });
-      return docs;
-   }
-   return [];
+  if (ids.length > 0) {
+    const docs = await model.find({
+      _id: {
+        $in: ids,
+      },
+    });
+    return docs;
+  }
+  return [];
 }
 
 /**
@@ -41,19 +41,19 @@ async function findList(model, ids) {
  * @returns {Document[]|null} all docs that match as an object with the ID as the key.
  */
 async function findObjects(model, ids) {
-   if (ids.length > 0) {
-      const docs = await model.find({
-         _id: {
-            $in: ids,
-         }
-      });
-      return listToDict(docs);
-   }
-   return [];
+  if (ids.length > 0) {
+    const docs = await model.find({
+      _id: {
+        $in: ids,
+      },
+    });
+    return listToDict(docs);
+  }
+  return [];
 }
 
 module.exports = {
-   listToDict: listToDict,
-   findList: findList,
-   findObjects: findObjects,
-}
+  listToDict: listToDict,
+  findList: findList,
+  findObjects: findObjects,
+};

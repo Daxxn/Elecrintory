@@ -6,140 +6,140 @@ const { findObjects } = require('../utils/dbHelper');
 const { messageHelper } = require('../utils/messageHelper');
 
 const buildRoute = () => {
-   const router = express.Router();
-   // #region READ/GET
-   router.get('/', async (req, res, next) => {
-      try {
-         const users = await userModel.find();
-         res.status(200).json({
-            message: 'user route',
-            users,
-         });
-      } catch (err) {
-         next(err);
+  const router = express.Router();
+  // #region READ/GET
+  router.get('/', async (req, res, next) => {
+    try {
+      const users = await userModel.find();
+      res.status(200).json({
+        message: 'user route',
+        users,
+      });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // Using the $in operator for the list
+  router.get('/:id', async (req, res, next) => {
+    try {
+      const foundUser = await userModel.findById(req.params.id);
+      if (foundUser) {
+        // OLD : Replaced with findObjects
+        // const partColl = await partModel.find({
+        //    _id: {
+        //       $in: foundUser.parts,
+        //    }
+        // });
+
+        const parts = await findObjects(partModel, foundUser.parts);
+        const packages = await findObjects(packageModel, foundUser.packages);
+        res.status(200).json({
+          user: foundUser,
+          parts,
+          packages,
+        });
+      } else {
+        res.status(400).json({
+          message: 'No User Found.',
+        });
       }
-   });
+    } catch (err) {
+      next(err);
+    }
+  });
+  // #endregion
 
-   // Using the $in operator for the list
-   router.get('/:id', async (req, res, next) => {
-      try {
-         const foundUser = await userModel.findById(req.params.id);
-         if (foundUser) {
-            // OLD : Replaced with findObjects
-            // const partColl = await partModel.find({
-            //    _id: {
-            //       $in: foundUser.parts,
-            //    }
-            // });
-
-            const parts = await findObjects(partModel, foundUser.parts);
-            const packages = await findObjects(packageModel, foundUser.packages);
-            res.status(200).json({
-               user: foundUser,
-               parts,
-               packages,
-            });
-         } else {
-            res.status(400).json({
-               message: 'No User Found.',
-            });
-         }
-      } catch (err) {
-         next(err);
-      }
-   });
-   // #endregion
-
-   // #region UPDATE/PATCH
-   router.patch('/:id', async (req, res, next) => {
-      try {
-         if (req.session) {
-            const { userId } = req.session;
-            if (userId) {
-               const { body } = req;
-               if (body) {
-                  const foundUser = await userModel.findById(userId);
-                  if (foundUser) {
-                     var data = body;
-                     if (data._id) {
-                        delete data._id;
-                     }
-                     if (data.__v) {
-                        delete data.__v;
-                     }
-                     Object.assign(foundUser, data);
-                     const savedUser = await foundUser.save();
-                     res.status(201).json({
-                        user: savedUser,
-                     });
-                  } else {
-                     res.status(400).json({
-                        message: 'No User Found.',
-                     });
-                  }
-               } else {
-                  res.status(400).json({
-                     message: 'No Body',
-                  });
-               }
+  // #region UPDATE/PATCH
+  router.patch('/:id', async (req, res, next) => {
+    try {
+      if (req.session) {
+        const { userId } = req.session;
+        if (userId) {
+          const { body } = req;
+          if (body) {
+            const foundUser = await userModel.findById(userId);
+            if (foundUser) {
+              var data = body;
+              if (data._id) {
+                delete data._id;
+              }
+              if (data.__v) {
+                delete data.__v;
+              }
+              Object.assign(foundUser, data);
+              const savedUser = await foundUser.save();
+              res.status(201).json({
+                user: savedUser,
+              });
             } else {
-               res.status(400).json({
-                  message: 'No Session User ID',
-               });
+              res.status(400).json({
+                message: 'No User Found.',
+              });
             }
-         } else {
+          } else {
             res.status(400).json({
-               message: 'No Session',
+              message: 'No Body',
             });
-         }
-      } catch (err) {
-         next(err);
+          }
+        } else {
+          res.status(400).json({
+            message: 'No Session User ID',
+          });
+        }
+      } else {
+        res.status(400).json({
+          message: 'No Session',
+        });
       }
-   });
-   // #endregion
+    } catch (err) {
+      next(err);
+    }
+  });
+  // #endregion
 
-   // #region DELETE
-   router.post('/unregister', async (req, res, next) => {
-     try {
-       if (req.session) {
-         if (req.session.userId) {
-           const foundUser = await userModel.findById(req.session.userId);
-           if (foundUser) {
-             const removedParts = await partModel.deleteMany({
-               _id: { $in: foundUser.parts },
-             });
-             const removedPacks = await packageModel.deleteMany({
-               _id: { $in: foundUser.packages },
-             });
+  // #region DELETE
+  router.post('/unregister', async (req, res, next) => {
+    try {
+      if (req.session) {
+        if (req.session.userId) {
+          const foundUser = await userModel.findById(req.session.userId);
+          if (foundUser) {
+            const removedParts = await partModel.deleteMany({
+              _id: { $in: foundUser.parts },
+            });
+            const removedPacks = await packageModel.deleteMany({
+              _id: { $in: foundUser.packages },
+            });
 
-             res.status(201).json({
-               message: 'Deleted User',
-               success: true,
-               remParts: removedParts.deletedCount,
-               remPackages: removedPacks.deletedCount,
-             });
-           } else {
-             res.status(400).json({
-               message: 'No User Found.',
-             });
-           }
-         } else {
-           res.status(400).json({
-             message: 'No User Session.',
-           });
-         }
-       } else {
-         res.status(400).json({
-           message: 'No Session.',
-         });
-       }
-     } catch (err) {
-       next(err);
-     }
-   });
-   // #endregion
+            res.status(201).json({
+              message: 'Deleted User',
+              success: true,
+              remParts: removedParts.deletedCount,
+              remPackages: removedPacks.deletedCount,
+            });
+          } else {
+            res.status(400).json({
+              message: 'No User Found.',
+            });
+          }
+        } else {
+          res.status(400).json({
+            message: 'No User Session.',
+          });
+        }
+      } else {
+        res.status(400).json({
+          message: 'No Session.',
+        });
+      }
+    } catch (err) {
+      next(err);
+    }
+  });
+  // #endregion
 
-   return router;
+  return router;
 };
 
 module.exports = buildRoute;

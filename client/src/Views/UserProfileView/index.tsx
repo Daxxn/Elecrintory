@@ -6,8 +6,8 @@ import SettingsModel from '../../Data/Models/SettingsModel';
 import UserModel from '../../Data/Models/UserModel';
 import EditSettings from './EditSettings';
 import DeleteButton from '../../Components/DeleteButton';
-import './UserProfileView.css';
 import Message from '../../Data/Utils/Message';
+import './UserProfileView.css';
 
 export interface UserProfileViewProps {
    user: UserModel | null;
