@@ -1,0 +1,18 @@
+.led-res-inputs {
+   display: flex;
+   flex-flow: column nowrap;
+}
+
+.calc-result {
+   font-size: 1.25rem;
+   font-weight: bold;
+}
+
+.led-res-calc {
+   display: flex;
+   flex-flow: row nowrap;
+}
+
+.led-res-image {
+   
+}

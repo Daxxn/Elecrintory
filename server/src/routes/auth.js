@@ -25,7 +25,6 @@ const buildRoute = () => {
             if (await bCrypt.compare(body.password, user.hash)) {
               req.session.userId = user._id;
               req.session.save();
-              // res.redirect(`/api/user/${user._id}`);
               res.status(200).json({
                 user,
               });
@@ -58,7 +57,6 @@ const buildRoute = () => {
             if (await bCrypt.compare(body.password, user.hash)) {
               req.session.userId = user._id;
               req.session.save();
-              // res.redirect(`/api/user/${user._id}`);
               res.status(200).json({
                 user,
               });
@@ -92,14 +90,6 @@ const buildRoute = () => {
           res.status(200).json({
             message: 'user logged out.',
           });
-          // req.session.destroy((err) => {
-          //   if (err) {
-          //     throw err;
-          //   }
-          //   res.status(200).json({
-          //     message: 'user logged out.',
-          //   });
-          // });
         }
       } else {
         res.status(400).json({
@@ -175,14 +165,6 @@ const buildRoute = () => {
             await userModel.deleteOne({ _id: foundUser._id });
             req.session.userId = null;
             req.session.save();
-            // req.session.destroy((err) => {
-            //   if (err) {
-            //     throw err;
-            //   }
-            //   res.status(200).json({
-            //     message: 'user logged out.',
-            //   });
-            // });
 
             res.status(201).json({
               message: 'Deleted User',
