@@ -11,6 +11,9 @@ const MongoSession = require('connect-mongo');
 const userModel = require('./models/users');
 const { messageHelper, messages } = require('./utils/messageHelper');
 
+const authCheck = require('./utils/authMiddleware/auth0');
+const oldAuthCheck = require('./utils/authMiddleware/oldAuth');
+
 // #region Routes
 const userRoute = require('./routes/user');
 const authRoute = require('./routes/auth');
@@ -32,28 +35,13 @@ const homeRoute = (app) => {
 
 // #region Build Routes
 const apiRoutes = (app, db) => {
-  app.use(async (req, res, next) => {
-    console.log('In auth check middleware');
-    if (req.session) {
-      if (req.session.userId) {
-        console.log('User logged in.');
-        next();
-      } else {
-        console.log('user NOT logged in.');
-        res.status(401).json({
-          message: messages[401]['notLoggedIn'],
-        });
-        // messageHelper(res, 401, 'notLoggedIn');
-      }
-    } else {
-      console.log('User NOT logged in / SESSION issue.');
-      res.status(401).json({
-        message: messages[401]['notSession'],
-      });
-      // messageHelper(res, 401, 'noSession');
-    }
-  });
   const apiRouter = express.Router();
+  // Auth Init
+  if (process.env.AUTH0 === 'true') {
+    apiRouter.use(authCheck);
+  } else {
+    apiRouter.use(oldAuthCheck);
+  }
   apiRouter.use('/user', userRoute());
   apiRouter.use('/parts', partsRoute());
   apiRouter.use('/packages', packageRoute());
@@ -65,15 +53,16 @@ const apiRoutes = (app, db) => {
 const initMiddleware = (app) => {
   app.use(
     cors({
-      origin: 'http://localhost:3000',
+      origin: ['http://localhost:3000'],
       exposedHeaders: ['Access-Control-Allow-Origin', 'Content-Type'],
-      allowedHeaders: ['Access-Control-Allow-Origin', 'Content-Type'],
+      allowedHeaders: [
+        'Access-Control-Allow-Origin',
+        'Content-Type',
+        'Authorization',
+      ],
       credentials: true,
     })
   );
-  // app.options('/', (req, res, next) => {
-  //    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-  // });
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
   app.use(express.static(path.join(__dirname, 'public')));

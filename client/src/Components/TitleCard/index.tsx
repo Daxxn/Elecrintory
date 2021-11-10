@@ -1,7 +1,8 @@
 import React from 'react';
 import UserModel, { Creds } from '../../Data/Models/UserModel';
 import UserButton from '../LoginModal/UserButton';
-import './TitleCard.css'
+import LoginButton from '../SimpleComponents/Auth/LoginButton';
+import './TitleCard.css';
 
 export interface TitleCardProps {
    user: UserModel | null;
@@ -13,20 +14,22 @@ export interface TitleCardProps {
 }
 
 const TitleCard = (props: TitleCardProps): JSX.Element => {
-   const { user, creds, handleLogin, handleLogout, handleRegister, handleCredsChange } = props;
+   // const { user, creds, handleLogin, handleLogout, handleRegister, handleCredsChange } = props;
+   const { user } = props;
 
    return (
       <div className="base-title-card">
          <h2>Electrintory</h2>
          {user ? <h2>{user.username}</h2> : ''}
-         <UserButton
+         {/* <UserButton
             user={user}
             creds={creds}
             handleLogin={handleLogin}
             handleCredsChange={handleCredsChange}
             handleRegister={handleRegister}
             handleLogout={handleLogout}
-         />
+         /> */}
+         <LoginButton user={user} />
       </div>
    );
 };

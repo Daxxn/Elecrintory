@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import './DeleteButton.css';
 
 export interface DeleteButtonProps {
    handleDelete: () => void;
+   children?: ReactNode;
 }
 
 const DeleteButton = (props: DeleteButtonProps): JSX.Element => {
-   const { handleDelete } = props;
+   const { handleDelete, children } = props;
    const [open, setOpen] = useState<boolean>(false);
 
    const handleConfirmDelete = () => {
       setOpen(false);
       handleDelete();
-   }
+   };
 
    return (
       <div className="delete-container">
@@ -39,7 +40,7 @@ const DeleteButton = (props: DeleteButtonProps): JSX.Element => {
                className="delete-button"
                onClick={() => setOpen(true)}
             >
-               Delete
+               {children ?? 'Delete'}
             </button>
          )}
       </div>

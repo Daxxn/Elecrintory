@@ -1,0 +1,25 @@
+.number-static {
+   font-weight: bold;
+   padding: 0.2rem;
+}
+
+.number-edit-container {
+   display: grid;
+   grid-template-rows: 1rem 1rem;
+   grid-template-columns: 1fr 2rem;
+   grid-template-areas: 
+      "input plus"
+      "input minus";
+}
+
+.number-input {
+   grid-area: input;
+}
+
+.number-plus-button {
+   grid-area: plus;
+}
+
+.number-minus-button {
+   grid-area: minus;
+}

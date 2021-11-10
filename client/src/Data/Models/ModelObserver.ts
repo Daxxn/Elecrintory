@@ -23,7 +23,16 @@ import {
 import Cookies from 'js-cookie';
 import Message from '../Utils/Message';
 import SettingsModel from './SettingsModel';
+import authConfig from '../../.authConfig.json';
+import { User as Auth0User, User } from '@auth0/auth0-react';
 
+// #region Auth Types
+export type AuthGetUser = {
+   userData: object;
+};
+// #endregion
+
+//#region Observer Types
 type UserCallback = (user: UserModel | null) => void;
 type PartCallback = (part: PartModel | PartCollection) => void;
 type PackageCallback = (part: PackageModel | PackageCollection) => void;
@@ -43,6 +52,7 @@ type Observers = {
       };
    };
 };
+//#endregion
 
 class ModelObserver {
    // #region Props
@@ -459,144 +469,268 @@ class ModelObserver {
       }
    }
 
-   // #region Authentication Handling
-   static async login(creds: Creds) {
-      try {
-         var response: StatusResult = 'ok';
-         const req = URLHelper.buildAuthFetch('login', creds);
-         Message.log('Starting Login Attempt');
-         const res = await fetch(req.url, req.config);
-         if (URLHelper.quickStatusCheck(res.status)) {
-            const data = (await res.json()) as LoginResponse;
-            if (data.user) {
-               Cookies.set('userId', data.user._id);
-               Cookies.set('loggedIn', 'true');
-               this.user = data.user;
-               await this.fetchUserData();
-            } else {
-               Message.msg('Login Issue', URLHelper.statusCheck(res.status));
-            }
-         } else {
-            const data = (await res.json()) as MessageResponse;
-            Message.msg(data.message, URLHelper.statusCheck(res.status));
-         }
-         if (response === 'ok') {
-            return URLHelper.statusCheck(res.status);
-         }
-         return response;
-      } catch (err) {
-         const error = err as Error;
-         if (error.message) {
-            Message.msg(error.message, 'error');
-         } else {
-            Message.msg('Unknown error', 'error');
-         }
-      }
-   }
+   // #region OLD Authentication Handling
+   // static async login(creds: Creds) {
+   //    try {
+   //       var response: StatusResult = 'ok';
+   //       const req = URLHelper.buildAuthFetch('login', creds);
+   //       Message.log('Starting Login Attempt');
+   //       const res = await fetch(req.url, req.config);
+   //       if (URLHelper.quickStatusCheck(res.status)) {
+   //          const data = (await res.json()) as LoginResponse;
+   //          if (data.user) {
+   //             Cookies.set('userId', data.user._id);
+   //             Cookies.set('loggedIn', 'true');
+   //             this.user = data.user;
+   //             await this.fetchUserData();
+   //          } else {
+   //             Message.msg('Login Issue', URLHelper.statusCheck(res.status));
+   //          }
+   //       } else {
+   //          const data = (await res.json()) as MessageResponse;
+   //          Message.msg(data.message, URLHelper.statusCheck(res.status));
+   //       }
+   //       if (response === 'ok') {
+   //          return URLHelper.statusCheck(res.status);
+   //       }
+   //       return response;
+   //    } catch (err) {
+   //       const error = err as Error;
+   //       if (error.message) {
+   //          Message.msg(error.message, 'error');
+   //       } else {
+   //          Message.msg('Unknown error', 'error');
+   //       }
+   //    }
+   // }
 
-   static async register(creds: Creds) {
-      if (this.user) {
-         Message.msg('A user is logged in. logout first!', 'error');
-         return;
-      }
-      try {
-         const req = URLHelper.buildAuthFetch('register', creds);
-         console.log('Starting Register Attempt');
-         const res = await fetch(req.url, req.config);
-         if (URLHelper.quickStatusCheck(res.status)) {
-            // TODO - Change the server response to just send a message.
-            //        The userId doesnt need to be sent when done.
-            const data = (await res.json()) as RegisterResponse;
-            console.log(data);
-            Message.response(data.message, res.status);
-         } else {
-            const data = (await res.json()) as MessageResponse;
-            console.log(data.message);
-            Message.response(data.message, res.status);
-         }
-      } catch (err) {
-         const error = err as Error;
-         if (error.message) {
-            Message.msg(error.message, 'error');
-         } else {
-            Message.msg('Unknown error', 'error');
-         }
-      }
-   }
+   // static async register(creds: Creds) {
+   //    if (this.user) {
+   //       Message.msg('A user is logged in. logout first!', 'error');
+   //       return;
+   //    }
+   //    try {
+   //       const req = URLHelper.buildAuthFetch('register', creds);
+   //       console.log('Starting Register Attempt');
+   //       const res = await fetch(req.url, req.config);
+   //       if (URLHelper.quickStatusCheck(res.status)) {
+   //          // TODO - Change the server response to just send a message.
+   //          //        The userId doesnt need to be sent when done.
+   //          const data = (await res.json()) as RegisterResponse;
+   //          console.log(data);
+   //          Message.response(data.message, res.status);
+   //       } else {
+   //          const data = (await res.json()) as MessageResponse;
+   //          console.log(data.message);
+   //          Message.response(data.message, res.status);
+   //       }
+   //    } catch (err) {
+   //       const error = err as Error;
+   //       if (error.message) {
+   //          Message.msg(error.message, 'error');
+   //       } else {
+   //          Message.msg('Unknown error', 'error');
+   //       }
+   //    }
+   // }
 
-   static async unregister(confUsername: string) {
-      if (this.user) {
-         if (confUsername === this.user.username) {
-            try {
-               const req = URLHelper.buildAuthFetch('unregister');
-               const res = await fetch(req.url, req.config);
-               if (URLHelper.quickStatusCheck(res.status) && res.status === 201) {
-                  const data = (await res.json()) as UnregisterResponse;
-                  console.log(data);
-                  if (data.success) {
-                     this.user = null;
-                     this.parts = {};
-                     this.packages = {};
-                     Cookies.set('loggedIn', 'false');
-                     Cookies.remove('userId');
-                     Cookies.remove('connect.sid');
-                     this.updateUserObservers(null);
-                  }
-                  Message.response(data.message, res.status);
-               } else {
-                  const data = (await res.json()) as MessageResponse;
-                  Message.response(data.message, res.status);
-               }
-            } catch (err) {
-               const error = err as Error;
-               if (error.message) {
-                  Message.msg(error.message, 'error');
-               } else {
-                  Message.msg('Unknown error', 'error');
-               }
-            }
-         } else {
-            Message.msg(
-               'Username did not match. Be careful. This deletes EVERYTHING!',
-               'error'
-            );
-         }
-      } else {
-         Message.msg('No user logged in... Unknown Error', 'error');
-      }
-   }
+   // static async unregister(confUsername: string) {
+   //    if (this.user) {
+   //       if (confUsername === this.user.username) {
+   //          try {
+   //             const req = URLHelper.buildAuthFetch('unregister');
+   //             const res = await fetch(req.url, req.config);
+   //             if (URLHelper.quickStatusCheck(res.status) && res.status === 201) {
+   //                const data = (await res.json()) as UnregisterResponse;
+   //                console.log(data);
+   //                if (data.success) {
+   //                   this.user = null;
+   //                   this.parts = {};
+   //                   this.packages = {};
+   //                   Cookies.set('loggedIn', 'false');
+   //                   Cookies.remove('userId');
+   //                   Cookies.remove('connect.sid');
+   //                   this.updateUserObservers(null);
+   //                }
+   //                Message.response(data.message, res.status);
+   //             } else {
+   //                const data = (await res.json()) as MessageResponse;
+   //                Message.response(data.message, res.status);
+   //             }
+   //          } catch (err) {
+   //             const error = err as Error;
+   //             if (error.message) {
+   //                Message.msg(error.message, 'error');
+   //             } else {
+   //                Message.msg('Unknown error', 'error');
+   //             }
+   //          }
+   //       } else {
+   //          Message.msg(
+   //             'Username did not match. Be careful. This deletes EVERYTHING!',
+   //             'error'
+   //          );
+   //       }
+   //    } else {
+   //       Message.msg('No user logged in... Unknown Error', 'error');
+   //    }
+   // }
 
-   private static postLogout() {
-      console.log('In Post Logout.');
-      this.user = null;
-      this.parts = {};
-      Cookies.set('loggedIn', 'false');
-      Cookies.remove('userId');
-      Cookies.remove('connect.sid');
-      this.updateUserObservers(null);
-   }
+   // private static postLogout() {
+   //    console.log('In Post Logout.');
+   //    this.user = null;
+   //    this.parts = {};
+   //    Cookies.set('loggedIn', 'false');
+   //    Cookies.remove('userId');
+   //    Cookies.remove('connect.sid');
+   //    this.updateUserObservers(null);
+   // }
 
-   static async logout() {
-      try {
-         const req = URLHelper.buildAuthFetch('logout');
-         console.log('Starting Logout Attempt');
-         const res = await fetch(req.url, req.config);
-         const data = (await res.json()) as MessageResponse;
-         // console.log(data.message);
-         if (URLHelper.quickStatusCheck(res.status)) {
-            this.postLogout();
-         }
-         Message.msg(data.message, URLHelper.statusCheck(res.status));
-      } catch (err) {
-         const error = err as Error;
-         if (error.message) {
-            Message.msg(error.message, 'error');
-         } else {
-            Message.msg('Unknown error', 'error');
-         }
-      }
-   }
+   // static async logout() {
+   //    try {
+   //       const req = URLHelper.buildAuthFetch('logout');
+   //       console.log('Starting Logout Attempt');
+   //       const res = await fetch(req.url, req.config);
+   //       const data = (await res.json()) as MessageResponse;
+   //       // console.log(data.message);
+   //       if (URLHelper.quickStatusCheck(res.status)) {
+   //          this.postLogout();
+   //       }
+   //       Message.msg(data.message, URLHelper.statusCheck(res.status));
+   //    } catch (err) {
+   //       const error = err as Error;
+   //       if (error.message) {
+   //          Message.msg(error.message, 'error');
+   //       } else {
+   //          Message.msg('Unknown error', 'error');
+   //       }
+   //    }
+   // }
    // #endregion
+   // #endregion
+
+   // #region Auth0 Authentication Handling
+   static async fetchUser(
+      accessToken: string,
+      userSub: string | undefined
+   ): Promise<boolean> {
+      try {
+         if (accessToken) {
+            if (userSub) {
+               const apiResponse = await fetch(
+                  `http://localhost:3131/api/user/${userSub}`,
+                  {
+                     method: 'GET',
+                     headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${accessToken}`,
+                     },
+                  }
+               );
+
+               if (URLHelper.quickStatusCheck(apiResponse.status)) {
+                  if (apiResponse.status === 202) {
+                     const createUser = window.confirm('Create new user?');
+                     if (createUser) {
+                        return true;
+                     }
+                  } else {
+                     const { user, parts, packages } =
+                        (await apiResponse.json()) as UserDataResponse;
+                     this.user = user;
+                     this.parts = parts;
+                     this.packages = packages;
+                     Message.response('User data retrieved.', apiResponse.status);
+                     this.updateUserObservers(user);
+                  }
+               } else {
+                  const { message } = (await apiResponse.json()) as MessageResponse;
+                  Message.response(message, apiResponse.status);
+               }
+            } else {
+               Message.msg('No user ID.', 'error');
+            }
+         } else {
+            Message.msg('No Access Token', 'error');
+         }
+         return false;
+      } catch (err) {
+         const error = err as Error;
+         if (error.message) {
+            Message.msg(error.message, 'error');
+         } else {
+            Message.msg('Unknown error', 'error');
+         }
+         return false;
+      }
+   }
+
+   static async fetchCreateUser(accessToken: string, authUser: User) {
+      try {
+         if (accessToken) {
+            if (authUser) {
+               const apiResponse = await fetch('http://localhost:3131/api/user/', {
+                  method: 'POST',
+                  headers: {
+                     'Content-Type': 'application/json',
+                     Authorization: `Bearer ${accessToken}`,
+                  },
+                  body: JSON.stringify(authUser),
+               });
+
+               if (URLHelper.quickStatusCheck(apiResponse.status)) {
+                  const { user } = (await apiResponse.json()) as LoginResponse;
+                  this.user = user;
+                  this.parts = {};
+                  this.packages = {};
+                  this.updateUserObservers(user);
+                  Message.response('Created User.', apiResponse.status);
+               } else {
+                  const { message } = (await apiResponse.json()) as MessageResponse;
+                  Message.response(message, apiResponse.status);
+               }
+            } else {
+               Message.msg('No user ID.', 'error');
+            }
+         } else {
+            Message.msg('No Access Token', 'error');
+         }
+      } catch (err) {
+         const error = err as Error;
+         if (error.message) {
+            Message.msg(error.message, 'error');
+         } else {
+            Message.msg('Unknown error', 'error');
+         }
+      }
+   }
+
+   static async fetchDeleteUser(userSub: string | undefined) {
+      try {
+         if (userSub) {
+            const accessToken = Cookies.get('accessToken');
+            if (accessToken) {
+               const apiRes = await fetch(
+                  `http://localhost:3131/api/user/${userSub}`
+               );
+
+               const { message } = (await apiRes.json()) as MessageResponse;
+               Message.response(message, apiRes.status);
+            } else {
+               Message.msg('No Access Token.', 'error');
+            }
+         } else {
+            Message.msg('No Auth0 user.', 'error');
+         }
+      } catch (err) {
+         const error = err as Error;
+         if (error.message) {
+            Message.msg(error.message, 'error');
+         } else {
+            Message.msg('Unknown error', 'error');
+         }
+      }
+   }
    // #endregion
 
    // #region Observer Methods

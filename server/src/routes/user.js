@@ -9,29 +9,36 @@ const buildRoute = () => {
   const router = express.Router();
   // #region READ/GET
   router.get('/', async (req, res, next) => {
-    try {
-      const users = await userModel.find();
-      res.status(200).json({
-        message: 'user route',
-        users,
-      });
-    } catch (err) {
-      next(err);
-    }
+    res.status(401).json({
+      message: 'Need a user ID.',
+    });
   });
 
-  // Using the $in operator for the list
+  // OLD Auth
+  // router.get('/:id', async (req, res, next) => {
+  //   try {
+  //     const foundUser = await userModel.findById(req.params.id);
+  //     if (foundUser) {
+  //       const parts = await findObjects(partModel, foundUser.parts);
+  //       const packages = await findObjects(packageModel, foundUser.packages);
+  //       res.status(200).json({
+  //         user: foundUser,
+  //         parts,
+  //         packages,
+  //       });
+  //     } else {
+  //       res.status(400).json({
+  //         message: 'No User Found.',
+  //       });
+  //     }
+  //   } catch (err) {
+  //     next(err);
+  //   }
+  // });
   router.get('/:id', async (req, res, next) => {
     try {
-      const foundUser = await userModel.findById(req.params.id);
+      const foundUser = await userModel.findOne({ authId: req.params.id });
       if (foundUser) {
-        // OLD : Replaced with findObjects
-        // const partColl = await partModel.find({
-        //    _id: {
-        //       $in: foundUser.parts,
-        //    }
-        // });
-
         const parts = await findObjects(partModel, foundUser.parts);
         const packages = await findObjects(packageModel, foundUser.packages);
         res.status(200).json({
@@ -40,7 +47,7 @@ const buildRoute = () => {
           packages,
         });
       } else {
-        res.status(400).json({
+        res.status(202).json({
           message: 'No User Found.',
         });
       }
@@ -53,43 +60,30 @@ const buildRoute = () => {
   // #region UPDATE/PATCH
   router.patch('/:id', async (req, res, next) => {
     try {
-      if (req.session) {
-        const { userId } = req.session;
-        if (userId) {
-          const { body } = req;
-          if (body) {
-            const foundUser = await userModel.findById(userId);
-            if (foundUser) {
-              var data = body;
-              if (data._id) {
-                delete data._id;
-              }
-              if (data.__v) {
-                delete data.__v;
-              }
-              Object.assign(foundUser, data);
-              const savedUser = await foundUser.save();
-              res.status(201).json({
-                user: savedUser,
-              });
-            } else {
-              res.status(400).json({
-                message: 'No User Found.',
-              });
-            }
-          } else {
-            res.status(400).json({
-              message: 'No Body',
-            });
+      const { body } = req;
+      if (body) {
+        const foundUser = await userModel.findById(userId);
+        if (foundUser) {
+          var data = body;
+          if (data._id) {
+            delete data._id;
           }
+          if (data.__v) {
+            delete data.__v;
+          }
+          Object.assign(foundUser, data);
+          const savedUser = await foundUser.save();
+          res.status(201).json({
+            user: savedUser,
+          });
         } else {
           res.status(400).json({
-            message: 'No Session User ID',
+            message: 'No User Found.',
           });
         }
       } else {
         res.status(400).json({
-          message: 'No Session',
+          message: 'No Body',
         });
       }
     } catch (err) {
@@ -101,8 +95,8 @@ const buildRoute = () => {
   // #region DELETE
   router.post('/unregister', async (req, res, next) => {
     try {
-      if (req.session) {
-        if (req.session.userId) {
+      // if (req.session) {
+      //   if (req.session.userId) {
           const foundUser = await userModel.findById(req.session.userId);
           if (foundUser) {
             const removedParts = await partModel.deleteMany({
@@ -123,14 +117,96 @@ const buildRoute = () => {
               message: 'No User Found.',
             });
           }
+      //   } else {
+      //     res.status(400).json({
+      //       message: 'No User Session.',
+      //     });
+      //   }
+      // } else {
+      //   res.status(400).json({
+      //     message: 'No Session.',
+      //   });
+      // }
+    } catch (err) {
+      next(err);
+    }
+  });
+  // #endregion
+
+  // #region Auth0
+  router.get('/:id', async (req, res, next) => {
+    try {
+      const foundUser = await userModel.find({
+        authId: req.params.id,
+      });
+      if (foundUser) {
+        const parts = await findObjects(partModel, foundUser.parts);
+        const packages = await findObjects(packageModel, foundUser.packages);
+        res.status(200).json({
+          user: foundUser,
+          parts,
+          packages,
+        });
+      } else {
+        res.status(400).json({
+          message: 'No User Found.',
+        });
+      }
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // I dont think im going to need a session for auth anymore.
+  // router.post('/logout/', async (req, res, next) => {
+  //   try {
+  //     if (req.session) {
+  //       if (req.session.accessToken) {
+  //         delete req.session.accessToken;
+  //         req.session.save();
+  //         res.status(200).json({
+  //           message: 'logged out.',
+  //         });
+  //       } else {
+  //         res.status(400).json({
+  //           message: 'No login session stored.',
+  //         });
+  //       }
+  //     } else {
+  //       res.status(400).json({
+  //         message: 'No session stored.',
+  //       });
+  //     }
+  //   } catch (err) {
+  //     next(err);
+  //   }
+  // });
+
+  router.post('/register', async (req, res, next) => {
+    try {
+      const { body } = req;
+      if (body) {
+        const foundUser = await userModel.findOne({ authId: body.authId });
+        if (!foundUser) {
+          if (body._id) {
+            delete body._id;
+          }
+          if (body.__v) {
+            delete body.__v;
+          }
+          const newUser = new userModel(body);
+          const savedUser = await newUser.save();
+          res.status(201).json({
+            user: savedUser,
+          });
         } else {
           res.status(400).json({
-            message: 'No User Session.',
+            message: 'User exists already',
           });
         }
       } else {
         res.status(400).json({
-          message: 'No Session.',
+          message: 'No Body',
         });
       }
     } catch (err) {
@@ -140,6 +216,6 @@ const buildRoute = () => {
   // #endregion
 
   return router;
-};
+};;
 
 module.exports = buildRoute;

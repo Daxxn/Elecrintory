@@ -123,7 +123,7 @@ const MainView = (props: MainViewProps): JSX.Element => {
                )}
             </div>
          ) : (
-            <p>No User</p>
+            <p>Getting your data...</p>
          )}
       </div>
    );
