@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Number from '../../Components/SimpleComponents/Number';
 import SettingsModel from '../../Data/Models/SettingsModel';
 import './UserProfileView.css';
 
@@ -11,14 +12,11 @@ const EditSettings = (props: EditSettingsProps): JSX.Element => {
    const { settings, handleCloseEdit } = props;
    const [currSettings, setCurrSettings] = useState<SettingsModel>(settings);
 
-   const handleEditOpeningView = (value: string) => {
-      const num = Number.parseInt(value);
-      if (!isNaN(num)) {
-         setCurrSettings({
-            ...currSettings,
-            openingView: num,
-         });
-      }
+   const handleOpenViewChange = (num: number) => {
+      setCurrSettings({
+         ...currSettings,
+         openingView: num,
+      });
    };
 
    return (
@@ -33,10 +31,12 @@ const EditSettings = (props: EditSettingsProps): JSX.Element => {
          </div>
          <div className="">
             <label>Starting View:</label>
-            <input
-               type="number"
-               onChange={e => handleEditOpeningView(e.target.value)}
+            <Number
                value={currSettings.openingView}
+               handleChange={handleOpenViewChange}
+               disabled={false}
+               max={5}
+               min={0}
             />
          </div>
       </div>

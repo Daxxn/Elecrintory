@@ -1,5 +1,5 @@
 import Timer from "./timer";
-import URLHelper, { StatusResult } from "./urlHelper";
+import URLHelper, { StatusResult } from './urlHelperOld';
 
 export type MessageCallback = (message: string | null) => void;
 export type StatusCallback = (status: StatusResult) => void;

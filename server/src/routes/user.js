@@ -14,27 +14,6 @@ const buildRoute = () => {
     });
   });
 
-  // OLD Auth
-  // router.get('/:id', async (req, res, next) => {
-  //   try {
-  //     const foundUser = await userModel.findById(req.params.id);
-  //     if (foundUser) {
-  //       const parts = await findObjects(partModel, foundUser.parts);
-  //       const packages = await findObjects(packageModel, foundUser.packages);
-  //       res.status(200).json({
-  //         user: foundUser,
-  //         parts,
-  //         packages,
-  //       });
-  //     } else {
-  //       res.status(400).json({
-  //         message: 'No User Found.',
-  //       });
-  //     }
-  //   } catch (err) {
-  //     next(err);
-  //   }
-  // });
   router.get('/:id', async (req, res, next) => {
     try {
       const foundUser = await userModel.findOne({ authId: req.params.id });
@@ -58,11 +37,11 @@ const buildRoute = () => {
   // #endregion
 
   // #region UPDATE/PATCH
-  router.patch('/:id', async (req, res, next) => {
+  router.patch('/', async (req, res, next) => {
     try {
       const { body } = req;
       if (body) {
-        const foundUser = await userModel.findById(userId);
+        const foundUser = await userModel.findById(body._id);
         if (foundUser) {
           var data = body;
           if (data._id) {
@@ -90,43 +69,69 @@ const buildRoute = () => {
       next(err);
     }
   });
+  // router.patch('/:id', async (req, res, next) => {
+  //   try {
+  //     const { body } = req;
+  //     if (body) {
+  //       const foundUser = await userModel.findById(req.params.id);
+  //       if (foundUser) {
+  //         var data = body;
+  //         if (data._id) {
+  //           delete data._id;
+  //         }
+  //         if (data.__v) {
+  //           delete data.__v;
+  //         }
+  //         Object.assign(foundUser, data);
+  //         const savedUser = await foundUser.save();
+  //         res.status(201).json({
+  //           user: savedUser,
+  //         });
+  //       } else {
+  //         res.status(400).json({
+  //           message: 'No User Found.',
+  //         });
+  //       }
+  //     } else {
+  //       res.status(400).json({
+  //         message: 'No Body',
+  //       });
+  //     }
+  //   } catch (err) {
+  //     next(err);
+  //   }
+  // });
   // #endregion
 
   // #region DELETE
-  router.post('/unregister', async (req, res, next) => {
+  router.post('/unregister/:id', async (req, res, next) => {
     try {
-      // if (req.session) {
-      //   if (req.session.userId) {
-          const foundUser = await userModel.findById(req.session.userId);
-          if (foundUser) {
-            const removedParts = await partModel.deleteMany({
-              _id: { $in: foundUser.parts },
-            });
-            const removedPacks = await packageModel.deleteMany({
-              _id: { $in: foundUser.packages },
-            });
+      if (req.params.id) {
+        const foundUser = await userModel.findById(req.params.id);
+        if (foundUser) {
+          const removedParts = await partModel.deleteMany({
+            _id: { $in: foundUser.parts },
+          });
+          const removedPacks = await packageModel.deleteMany({
+            _id: { $in: foundUser.packages },
+          });
 
-            res.status(201).json({
-              message: 'Deleted User',
-              success: true,
-              remParts: removedParts.deletedCount,
-              remPackages: removedPacks.deletedCount,
-            });
-          } else {
-            res.status(400).json({
-              message: 'No User Found.',
-            });
-          }
-      //   } else {
-      //     res.status(400).json({
-      //       message: 'No User Session.',
-      //     });
-      //   }
-      // } else {
-      //   res.status(400).json({
-      //     message: 'No Session.',
-      //   });
-      // }
+          res.status(201).json({
+            message: 'Deleted User.',
+            success: true,
+            remParts: removedParts.deletedCount,
+            remPackages: removedPacks.deletedCount,
+          });
+        } else {
+          res.status(400).json({
+            message: 'No User Found.',
+          });
+        }
+      } else {
+        res.status(400).json({
+          message: 'No ID.',
+        });
+      }
     } catch (err) {
       next(err);
     }
@@ -134,47 +139,22 @@ const buildRoute = () => {
   // #endregion
 
   // #region Auth0
-  router.get('/:id', async (req, res, next) => {
-    try {
-      const foundUser = await userModel.find({
-        authId: req.params.id,
-      });
-      if (foundUser) {
-        const parts = await findObjects(partModel, foundUser.parts);
-        const packages = await findObjects(packageModel, foundUser.packages);
-        res.status(200).json({
-          user: foundUser,
-          parts,
-          packages,
-        });
-      } else {
-        res.status(400).json({
-          message: 'No User Found.',
-        });
-      }
-    } catch (err) {
-      next(err);
-    }
-  });
-
-  // I dont think im going to need a session for auth anymore.
-  // router.post('/logout/', async (req, res, next) => {
+  // router.get('/:id', async (req, res, next) => {
   //   try {
-  //     if (req.session) {
-  //       if (req.session.accessToken) {
-  //         delete req.session.accessToken;
-  //         req.session.save();
-  //         res.status(200).json({
-  //           message: 'logged out.',
-  //         });
-  //       } else {
-  //         res.status(400).json({
-  //           message: 'No login session stored.',
-  //         });
-  //       }
+  //     const foundUser = await userModel.find({
+  //       authId: req.params.id,
+  //     });
+  //     if (foundUser) {
+  //       const parts = await findObjects(partModel, foundUser.parts);
+  //       const packages = await findObjects(packageModel, foundUser.packages);
+  //       res.status(200).json({
+  //         user: foundUser,
+  //         parts,
+  //         packages,
+  //       });
   //     } else {
   //       res.status(400).json({
-  //         message: 'No session stored.',
+  //         message: 'No User Found.',
   //       });
   //     }
   //   } catch (err) {
@@ -194,7 +174,11 @@ const buildRoute = () => {
           if (body.__v) {
             delete body.__v;
           }
-          const newUser = new userModel(body);
+          const newUser = new userModel({
+            username: body.name,
+            email: body.email,
+            authId: body.sub,
+          });
           const savedUser = await newUser.save();
           res.status(201).json({
             user: savedUser,

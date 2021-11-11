@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import PackageControls from '../../Components/PackageControls';
+import Number from '../../Components/SimpleComponents/Number';
 import { PackageModel } from '../../Data/Models/DataModels';
 import './PackagesView.css';
 
 const blankPackage = {
    desc: '',
-   leads: 0,
+   leads: 1,
    name: '',
    packageId: '',
    _id: '',
@@ -38,27 +39,14 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
       handleClearPackage,
       handleDeletePackage,
    } = props;
-   const [leadState, setLeadState] = useState<string>(
-      selectedPackage ? selectedPackage.leads.toString() : '0'
-   );
-   const [newLeadState, setNewLeadState] = useState<string>('0');
+
    const [newPackage, setNewPackage] = useState<PackageModel>(blankPackage);
 
-   /**
-    * Handles string to number conversion for the lead count.
-    * (Fucking TypeScript...)
-    * @param value Current State
-    */
-   const handleLeadStateChange = (value: string) => {
-      console.log('In Selected Package Leads Update');
-      const num = parseInt(value);
-      if (isNaN(num)) {
-         handleLeadChange(num);
-      }
-      setLeadState(value);
-   };
-
    // #region New Package Handlers
+   /**
+    * Set the updated name of the new package.
+    * @param value Updated name
+    */
    const handleNameInput = (value: string) => {
       setNewPackage({
          ...newPackage,
@@ -66,6 +54,10 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
       });
    };
 
+   /**
+    * Set the updated packageID of the new package.
+    * @param value Updated packageId
+    */
    const handleIDInput = (value: string) => {
       setNewPackage({
          ...newPackage,
@@ -73,18 +65,21 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
       });
    };
 
-   const handleLeadsInput = (value: string) => {
-      console.log('In New Package Leads Update');
-      const num = parseInt(value);
-      if (isNaN(num)) {
-         setNewPackage({
-            ...newPackage,
-            leads: num,
-         });
-      }
-      setNewLeadState(value);
+   /**
+    * Set the updated leads of the new package.
+    * @param value Updated leads
+    */
+   const handleLeadInput = (num: number) => {
+      setNewPackage({
+         ...newPackage,
+         leads: num,
+      });
    };
 
+   /**
+    * Set the updated description of the new package.
+    * @param value Updated desc
+    */
    const handleDescInput = (value: string) => {
       setNewPackage({
          ...newPackage,
@@ -93,7 +88,11 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
    };
    // #endregion
 
+   /**
+    * Deselect package and clear editor view.
+    */
    const handleClear = () => {
+      // Clear selected package
       if (!selectedPackage) {
          setNewPackage(blankPackage);
       } else {
@@ -101,8 +100,12 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
       }
    };
 
+   /**
+    * Either update the selected
+    * package or create a new package.
+    */
    const handleCreate = () => {
-      // Create the new package.
+      // Create a new package.
       if (selectedPackage) {
          console.log('Saving Selected Package...');
          handleSavePackage(selectedPackage);
@@ -137,14 +140,12 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
                </div>
                <div className="item-container">
                   <p>Leads</p>
-                  <input
-                     className=""
-                     id="leads-input"
-                     type="number"
-                     min="0"
-                     max="1000"
-                     onChange={e => handleLeadStateChange(e.target.value)}
-                     value={leadState}
+                  <Number
+                     value={selectedPackage.leads}
+                     handleChange={num => handleLeadChange(num)}
+                     disabled={false}
+                     min={1}
+                     max={500}
                   />
                </div>
                <div className="item-container">
@@ -181,14 +182,12 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
                </div>
                <div className="item-container">
                   <p>Leads</p>
-                  <input
-                     className=""
-                     id="leads-input"
-                     type="number"
-                     min="0"
-                     max="1000"
-                     onChange={e => handleLeadsInput(e.target.value)}
-                     value={newLeadState}
+                  <Number
+                     value={newPackage.leads}
+                     handleChange={num => handleLeadInput(num)}
+                     disabled={false}
+                     min={1}
+                     max={500}
                   />
                </div>
                <div className="item-container">
@@ -203,7 +202,6 @@ const SelectedPackageView = (props: SelectedPackageViewProps): JSX.Element => {
                </div>
             </div>
          )}
-
          <PackageControls
             packageSelected={selectedPackage !== null}
             handleAddPackage={handleCreate}

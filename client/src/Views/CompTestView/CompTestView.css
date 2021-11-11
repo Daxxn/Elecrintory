@@ -1,0 +1,4 @@
+.comp-test-cont {
+   display: flex;
+   flex-flow: column nowrap;
+}

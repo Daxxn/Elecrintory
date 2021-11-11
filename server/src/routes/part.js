@@ -5,23 +5,16 @@ const dbHelper = require('../utils/dbHelper');
 const { messageHelper } = require('../utils/messageHelper');
 
 /**
- * Gets all parts.
- * @param {ObjectId[]} userId
+ * Creates the router and mounts the route methods.
+ * @returns Part Router
  */
-// const getPartsObject = async (partIds) => {
-//    if (partIds.length > 0) {
-//       const p = await partModel.find({
-//          _id: {
-//             $in: partIds,
-//          }
-//       });
-//       return dbHelper.listToDict(p);
-//    }
-// }
-
 const buildRoute = () => {
   const router = express.Router();
   // #region READ/GET
+  /**
+   * Get Part
+   * Params: ID: string
+   */
   router.get('/:id', async (req, res, next) => {
     try {
       const part = await partModel.findById(req.params.id);
@@ -33,102 +26,79 @@ const buildRoute = () => {
   // #endregion
 
   // #region CREATE/POST
-  router.post('/', async (req, res, next) => {
-    try {
-      const { body } = req;
-      if (body) {
-        if (req.session) {
-          if (req.session.userId) {
-            const newPart = new partModel(body);
-            const savedPart = await newPart.save();
-            if (savedPart) {
-              const foundUser = await userModel.findById(req.session.userId);
-              if (foundUser) {
-                foundUser.parts.append(savedPart._id);
-                await foundUser.save();
-                res.status(201).json({
-                  user: foundUser,
-                  // partsList: foundUser.parts,
-                });
-              } else {
-                res.status(400).json({
-                  message: 'Unable to find user.',
-                });
-              }
-            } else {
-              res.status(400).json({
-                message: 'Part save failed.',
-              });
-            }
-          } else {
-            res.status(400).json({
-              message: 'Session User ID not found.',
-            });
-          }
-        } else {
-          res.status(500).json({
-            message: 'No Session',
-          });
-        }
-      } else {
-        res.status(400).json({
-          message: 'No Body.',
-        });
-      }
-    } catch (err) {
-      next(err);
-    }
-  });
+  // router.post('/', async (req, res, next) => {
+  //   try {
+  //     const { body } = req;
+  //     if (body) {
+  //       const newPart = new partModel(body);
+  //       const savedPart = await newPart.save();
+  //       if (savedPart) {
+  //         const foundUser = await userModel.findById(req.session.userId);
+  //         if (foundUser) {
+  //           foundUser.parts.append(savedPart._id);
+  //           await foundUser.save();
+  //           res.status(201).json({
+  //             user: foundUser,
+  //             // partsList: foundUser.parts,
+  //           });
+  //         } else {
+  //           res.status(400).json({
+  //             message: 'Unable to find user.',
+  //           });
+  //         }
+  //       } else {
+  //         res.status(400).json({
+  //           message: 'Part save failed.',
+  //         });
+  //       }
+  //     } else {
+  //       res.status(400).json({
+  //         message: 'No Body.',
+  //       });
+  //     }
+  //   } catch (err) {
+  //     next(err);
+  //   }
+  // });
 
-  router.post('/:partName', async (req, res, next) => {
+  router.post('/:userId', async (req, res, next) => {
     try {
-      const { partName } = req.params;
+      const { userId } = req.params;
+      const { partName } = req.body;
       if (partName) {
-        if (req.session) {
-          if (req.session.userId) {
-            const newPart = new partModel({
-              partName,
-            });
-            const user = await userModel.findById(req.session.userId);
-            if (user) {
-              const savedPart = await newPart.save();
-              user.parts.push(savedPart._id);
-              const savedUser = await user.save();
-              if (savedUser) {
-                if (savedPart) {
-                  const parts = await dbHelper.findObjects(partModel, user.parts);
-                  res.status(201).json({
-                    user: savedUser,
-                    parts,
-                  });
-                } else {
-                  res.status(400).json({
-                    message: 'New Part failure.',
-                  });
-                }
-              } else {
-                res.status(400).json({
-                  message: 'User Save Failure',
-                });
-              }
+        const newPart = new partModel({
+          partName,
+        });
+        const user = await userModel.findById(userId);
+        if (user) {
+          const savedPart = await newPart.save();
+          user.parts.push(savedPart._id);
+          const savedUser = await user.save();
+          if (savedUser) {
+            if (savedPart) {
+              const parts = await dbHelper.findObjects(partModel, user.parts);
+              res.status(201).json({
+                user: savedUser,
+                parts,
+              });
             } else {
               res.status(400).json({
-                message: 'No User Found.',
+                message: 'New Part failure.',
               });
             }
           } else {
             res.status(400).json({
-              message: 'No Session User ID',
+              message: 'User Save Failure',
             });
           }
         } else {
           res.status(400).json({
-            message: 'No Session',
+            message: 'No User Found.',
           });
         }
       } else {
         res.status(400).json({
-          message: 'No Part Name.',
+          message: 'No Part Name',
         });
       }
     } catch (err) {
@@ -274,49 +244,42 @@ const buildRoute = () => {
   // #endregion
 
   // #region DELETE
-  router.delete('/:id', async (req, res, next) => {
+  router.delete('/:userId', async (req, res, next) => {
     try {
-      const { id } = req.params;
-      if (id) {
-        if (req.session) {
-          if (req.session.userId) {
-            const foundUser = await userModel.findById(req.session.userId);
-            if (foundUser) {
-              const { parts } = foundUser;
-              if (parts.includes(id)) {
-                const removedParts = parts.filter((p) => p != id);
-                foundUser.parts = removedParts;
-                const result = await partModel.deleteOne({ _id: id });
-                if (result.deletedCount === 1) {
-                  const savedUser = await foundUser.save();
-                  res.status(201).json({
-                    id,
-                    user: savedUser,
-                  });
-                } else if (result.deletedCount > 1) {
-                  res.status(400).json({
-                    message: 'More that one part was found with that ID.',
-                  });
-                } else {
-                  res.status(400).json({
-                    message: 'Unable to find correct part.',
-                  });
-                }
-              } else {
-                res.status(401).json({
-                  message: 'Part doesnt belong to you.',
-                });
-              }
+      const { userId } = req.params;
+      const { partId } = req.body;
+      if (userId && partId) {
+        const foundUser = await userModel.findById(userId);
+        if (foundUser) {
+          const { parts } = foundUser;
+          if (parts.includes(partId)) {
+            const removedParts = parts.filter((p) => p != partId);
+            foundUser.parts = removedParts;
+            const result = await partModel.deleteOne({ _id: partId });
+            if (result.deletedCount === 1) {
+              const savedUser = await foundUser.save();
+              res.status(201).json({
+                id: partId,
+                user: savedUser,
+              });
+            } else if (result.deletedCount > 1) {
+              res.status(400).json({
+                message: 'More that one part was found with that ID.',
+              });
             } else {
               res.status(400).json({
-                message: 'Unable to find user.',
+                message: 'Unable to find correct part.',
               });
             }
           } else {
-            messageHelper(res, 500, 'noUserSession');
+            res.status(401).json({
+              message: 'Part doesnt belong to you.',
+            });
           }
         } else {
-          messageHelper(res, 500, 'noSession');
+          res.status(400).json({
+            message: 'Unable to find user.',
+          });
         }
       } else {
         messageHelper(res, 400, 'noId');

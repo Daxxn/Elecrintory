@@ -15,6 +15,11 @@ export interface PartProps {
    handleSelectTag: (tag: string) => void;
 }
 
+/**
+ * Individual Part component
+ * @param props Part Props
+ * @returns Part Component
+ */
 const Part = (props: PartProps): JSX.Element => {
    const {
       partId,
@@ -35,22 +40,35 @@ const Part = (props: PartProps): JSX.Element => {
       };
    }, [partId]);
 
+   /**
+    * Add currently selected package to the part.
+    */
    const handleAddSelectedPackage = () => {
       if (selectedPackageId) {
          ModelObserver.addSelectedPackage(partId, selectedPackageId);
       }
    };
 
+   /**
+    * Update the part if the updated part parameter is not null.
+    * @param part updated part
+    */
    const handleCloseEdit = async (part?: PartModel) => {
       if (part) {
-         await ModelObserver.updatePart(part);
+         // await ModelObserver.updatePart(part);
+         await ModelObserver.fetchUpdatePart(part);
       }
       setEditMode(false);
    };
 
+   /**
+    * Delete the part.
+    * @param partId Id of part
+    */
    const handleDeletePart = async (partId: string) => {
       if (part) {
-         await ModelObserver.deletePart(partId);
+         // await ModelObserver.deletePart(partId);
+         await ModelObserver.fetchDeletePart(partId);
       }
    };
 

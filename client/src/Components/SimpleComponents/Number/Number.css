@@ -4,22 +4,27 @@
 }
 
 .number-edit-container {
-   display: grid;
-   grid-template-rows: 1rem 1rem;
-   grid-template-columns: 1fr 2rem;
-   grid-template-areas: 
-      "input plus"
-      "input minus";
+   display: flex;
+   flex-flow: row nowrap;
+   align-content: stretch;
+   justify-content: flex-start;
+   align-items: stretch;
+}
+
+.number-edit-controls {
+   display: flex;
+   flex-flow: column nowrap;
 }
 
 .number-input {
-   grid-area: input;
+   align-content: stretch;
+   min-width: 50px;
 }
 
 .number-plus-button {
-   grid-area: plus;
+   padding: 0.1rem;
 }
 
 .number-minus-button {
-   grid-area: minus;
+   padding: 0.1rem;
 }

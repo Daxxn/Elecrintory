@@ -9,6 +9,11 @@ export interface PackageControlsProps {
    handleDeletePackage: () => void;
 }
 
+/**
+ * Container for package controls
+ * @param props PackageControl Props
+ * @returns PackageControl Component
+ */
 const PackageControls = (props: PackageControlsProps): JSX.Element => {
    const {
       packageSelected,

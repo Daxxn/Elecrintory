@@ -3,19 +3,29 @@ import Package from '../../Components/Package';
 import { PackageModel } from '../../Data/Models/DataModels';
 import ModelObserver from '../../Data/Models/ModelObserver';
 import SelectedPackageView from './SelectedPackageView';
-import './PackagesView.css';
 import Message from '../../Data/Utils/Message';
+import './PackagesView.css';
 
 interface PackagesViewProps {
    selectedPackage: PackageModel | null;
+   packages: string[];
    handleSetSelectedPackage: (selected: PackageModel | null) => void;
 }
 
+/**
+ * List all the packages for the user and Create Package Editor.
+ * @param props PackageView Props
+ * @returns PackagesView Component
+ */
 const PackagesView = (props: PackagesViewProps): JSX.Element => {
-   const { selectedPackage, handleSetSelectedPackage } = props;
-   const packages = ModelObserver.getPackageCollection();
+   const { selectedPackage, packages, handleSetSelectedPackage } = props;
+   const allPackages = ModelObserver.getPackageCollection();
 
    // #region Input Handling
+   /**
+    * Update selected package name.
+    * @param value Updated name
+    */
    const handleNameChange = (value: string) => {
       if (selectedPackage) {
          handleSetSelectedPackage({
@@ -25,6 +35,10 @@ const PackagesView = (props: PackagesViewProps): JSX.Element => {
       }
    };
 
+   /**
+    * Update selected package ID.
+    * @param value Updated packageId
+    */
    const handleIDChange = (value: string) => {
       if (selectedPackage) {
          handleSetSelectedPackage({
@@ -34,6 +48,10 @@ const PackagesView = (props: PackagesViewProps): JSX.Element => {
       }
    };
 
+   /**
+    * Update selected package Leads.
+    * @param value Updated leads
+    */
    const handleLeadsChange = (value: number) => {
       if (selectedPackage) {
          handleSetSelectedPackage({
@@ -43,6 +61,10 @@ const PackagesView = (props: PackagesViewProps): JSX.Element => {
       }
    };
 
+   /**
+    * Update selected package Description.
+    * @param value Updated desc
+    */
    const handleDescChange = (value: string) => {
       if (selectedPackage) {
          handleSetSelectedPackage({
@@ -53,38 +75,63 @@ const PackagesView = (props: PackagesViewProps): JSX.Element => {
    };
    // #endregion
 
+   /**
+    * Change selected package.
+    * @param packageId Selected package ObjectId
+    */
    const handleSelect = (packageId: string) => {
-      const selectedPack = packages[packageId];
+      const selectedPack = allPackages[packageId];
       console.log(selectedPack);
       if (selectedPack) {
          handleSetSelectedPackage(selectedPack);
       }
    };
 
+   /**
+    * Deselect package.
+    */
    const handleClearPackage = () => {
       handleSetSelectedPackage(null);
    };
 
+   /**
+    * Send new package to the server.
+    * @param pack New package
+    */
    const handleCreatePackage = async (pack: PackageModel) => {
-      console.log('Create Package');
       if (pack.name !== '' && pack.packageId !== '') {
-         await ModelObserver.newPackage(pack);
+         // await ModelObserver.newPackage(pack);
+         await ModelObserver.fetchCreatePackage(pack);
       } else {
          Message.msg('Cannot create. Invalid properties.', 'error');
       }
    };
 
+   /**
+    * Send updated package to the server.
+    * @param pack New package
+    */
    const handleSavePackage = async (pack: PackageModel) => {
       if (pack.name !== '' && pack.packageId !== '') {
-         await ModelObserver.updatePackage(pack);
+         // await ModelObserver.updatePackage(pack);
+         await ModelObserver.fetchUpdatePackage(pack);
       } else {
          Message.msg('Cannot save. Invalid properties.', 'error');
       }
    };
 
+   /**
+    * Request delete selected package from the server.
+    */
    const handleDeletePackage = async () => {
       if (selectedPackage) {
-         await ModelObserver.deletePackage(selectedPackage._id);
+         // await ModelObserver.deletePackage(selectedPackage._id);
+         const success = await ModelObserver.fetchDeletePackage(
+            selectedPackage._id
+         );
+         if (success) {
+            handleSetSelectedPackage(null);
+         }
       }
    };
 
@@ -95,9 +142,9 @@ const PackagesView = (props: PackagesViewProps): JSX.Element => {
                <>
                   {Object.values(packages).map(pck => (
                      <Package
-                        key={`package-comp-${pck._id}`}
-                        isSelected={pck._id === selectedPackage?._id}
-                        packageItem={pck}
+                        key={`package-comp-${pck}`}
+                        isSelected={pck === selectedPackage?._id}
+                        packageItem={allPackages[pck]}
                         handleSelect={handleSelect}
                      />
                   ))}

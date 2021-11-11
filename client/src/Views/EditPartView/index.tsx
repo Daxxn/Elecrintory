@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Number from '../../Components/SimpleComponents/Number';
 import PartModel from '../../Data/Models/DataModels';
 import ModelObserver from '../../Data/Models/ModelObserver';
 import './EditPartView.css';
@@ -19,11 +20,17 @@ const blankPart: PartModel = {
    ordered: 0,
    packages: [],
    tags: [],
-}
+};
 
+/**
+ * Part editor component
+ * @param props EditPart Props
+ * @returns EditPartView Component
+ */
 const EditPartView = (props: EditPartViewProps): JSX.Element => {
    const { partId, handleCloseEdit } = props;
    const foundPart = ModelObserver.getPart(partId);
+
    const [part, setPart] = useState<PartModel>(foundPart ?? blankPart);
 
    const datasheetLinkChange = (url: string) => {
@@ -47,26 +54,6 @@ const EditPartView = (props: EditPartViewProps): JSX.Element => {
       });
    };
 
-   const inventoryChange = (value: string) => {
-      const num = parseInt(value);
-      if (!isNaN(num)) {
-         setPart({
-            ...part,
-            inventory: num,
-         });
-      }
-   };
-
-   const orderedChange = (value: string) => {
-      const num = parseInt(value);
-      if (!isNaN(num)) {
-         setPart({
-            ...part,
-            ordered: num,
-         });
-      }
-   };
-
    const descChange = (value: string) => {
       setPart({
          ...part,
@@ -79,54 +66,64 @@ const EditPartView = (props: EditPartViewProps): JSX.Element => {
          <div className="part-item-edit-container name">
             <p>Part Name</p>
             <input
+               tabIndex={1}
                className="part-input-edit"
-               onChange={(e) => nameChange(e.target.value)}
+               onChange={e => nameChange(e.target.value)}
                value={part.partName}
             />
          </div>
          <div className="part-item-edit-container manuf">
             <p>Manufacturer</p>
             <input
+               tabIndex={2}
                className="part-input-edit"
-               onChange={(e) => manufChange(e.target.value)}
+               onChange={e => manufChange(e.target.value)}
                value={part.manufacturer}
-            />
-         </div>
-         <div className="part-item-edit-container inv">
-            <p>Inventory</p>
-            <input
-               className="part-input-edit"
-               onChange={(e) => inventoryChange(e.target.value)}
-               value={part.inventory}
             />
          </div>
          <div className="part-item-edit-container ordered">
             <p>Ordered</p>
-            <input
-               className="part-input-edit"
-               onChange={(e) => orderedChange(e.target.value)}
+            <Number
+               tabIndex={3}
                value={part.ordered}
+               handleChange={num => setPart({ ...part, ordered: num })}
+               min={0}
+            />
+         </div>
+         <div className="part-item-edit-container inv">
+            <p>Inventory</p>
+            <Number
+               tabIndex={4}
+               value={part.inventory}
+               handleChange={num => setPart({ ...part, inventory: num })}
+               min={0}
             />
          </div>
          <div className="part-item-edit-container desc">
             <p className="desc-label">Desc</p>
             <textarea
+               tabIndex={6}
                className="desc-box"
-               onChange={(e) => descChange(e.target.value)}
+               onChange={e => descChange(e.target.value)}
                value={part.desc}
             />
          </div>
          <div className="part-item-edit-container datasheet-container datasheet">
             <p>Datasheet</p>
             <input
+               tabIndex={5}
                type="url"
-               onChange={(e) => datasheetLinkChange(e.target.value)}
+               onChange={e => datasheetLinkChange(e.target.value)}
                value={part.datasheet}
             />
          </div>
 
-         <button className="save-button" onClick={() => handleCloseEdit(part)}>Save</button>
-         <button className="cancel-button" onClick={() => handleCloseEdit()}>Cancel</button>
+         <button className="save-button" onClick={() => handleCloseEdit(part)}>
+            Save
+         </button>
+         <button className="cancel-button" onClick={() => handleCloseEdit()}>
+            Cancel
+         </button>
       </div>
    ) : (
       <p>Part Edit Failure</p>

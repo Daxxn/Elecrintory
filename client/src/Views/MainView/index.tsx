@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PackageModel } from '../../Data/Models/DataModels';
 import UserModel from '../../Data/Models/UserModel';
 import CalculatorsView from '../CalculatorsView';
+import CompTestView from '../CompTestView';
 import PackagesView from '../PackagesView';
 import PartsList from '../PartsList';
 import SearchView from '../SearchView';
@@ -16,6 +17,11 @@ export interface MainViewProps {
    handleSetSelectedPackage: (selected: PackageModel | null) => void;
 }
 
+/**
+ * Main View Container
+ * @param props MainView Props
+ * @returns MainView Component
+ */
 const MainView = (props: MainViewProps): JSX.Element => {
    const {
       user,
@@ -71,6 +77,14 @@ const MainView = (props: MainViewProps): JSX.Element => {
                   >
                      Profile
                   </button>
+                  <button
+                     className={`view-sel-button ${
+                        index === 5 ? 'selected-button' : ''
+                     }`}
+                     onClick={() => setIndex(5)}
+                  >
+                     Testing
+                  </button>
                </div>
                {index === 0 ? (
                   <div>
@@ -90,6 +104,7 @@ const MainView = (props: MainViewProps): JSX.Element => {
                   <div>
                      <h2>Packages</h2>
                      <PackagesView
+                        packages={user.packages}
                         selectedPackage={selectedPackage}
                         handleSetSelectedPackage={handleSetSelectedPackage}
                      />
@@ -117,6 +132,14 @@ const MainView = (props: MainViewProps): JSX.Element => {
                   <div>
                      <h2>User Profile</h2>
                      <UserProfileView user={user} />
+                  </div>
+               ) : (
+                  ''
+               )}
+               {index === 5 ? (
+                  <div>
+                     <h2>Component Testing View</h2>
+                     <CompTestView />
                   </div>
                ) : (
                   ''

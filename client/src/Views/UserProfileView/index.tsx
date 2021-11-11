@@ -24,7 +24,8 @@ const UserProfileView = (props: UserProfileViewProps): JSX.Element => {
       if (current && user) {
          const newUser = { ...user };
          newUser.settings = current;
-         ModelObserver.setUser(newUser);
+         // ModelObserver.setUser(newUser);
+         ModelObserver.setUserSettings(current);
       }
       setEditMode(false);
    };

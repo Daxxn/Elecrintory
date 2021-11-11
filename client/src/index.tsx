@@ -10,11 +10,11 @@ console.log();
 
 ReactDOM.render(
    <Auth0Provider
-      domain="dev-6ryc0ksm.us.auth0.com"
-      clientId="IZSDK2YheMqHNd54wMqIVHiLw4TOYZip"
+      domain={authConfig.domain}
+      clientId={authConfig.clientId}
       redirectUri={window.location.origin}
-      audience="https://electrintory-api.com"
-      scope="read:current_user update:current_user_metadata"
+      audience={authConfig.audience}
+      scope={authConfig.scope}
    >
       {/* <Auth0Provider
       domain={authConfig.normal.domain}

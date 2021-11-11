@@ -10,6 +10,11 @@ export interface PartsListProps {
    handleSelectTag: (tag: string) => void;
 }
 
+/**
+ * Generate parts list.
+ * @param props Parts
+ * @returns Parts List Component
+ */
 const PartsList = (props: PartsListProps): JSX.Element => {
    const {
       parts,
@@ -18,8 +23,15 @@ const PartsList = (props: PartsListProps): JSX.Element => {
    } = props;
    const userLoggedIn = ModelObserver.getUser() != null;
 
+   /**
+    * Sends part name to the server to create a new part.
+    * The part list is updated when the new part returns
+    * from the server.
+    * @param partName New part name
+    */
    const handleAddPart = async (partName: string) => {
-      await ModelObserver.newPart(partName);
+      // await ModelObserver.newPart(partName);
+      await ModelObserver.fetchCreatePart(partName);
    }
 
    return userLoggedIn ? (
