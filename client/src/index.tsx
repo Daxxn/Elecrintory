@@ -4,28 +4,22 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Auth0Provider } from '@auth0/auth0-react';
+import ConfigSetup from './Data/Utils/ConfigSetup';
 
-console.log();
+const config = ConfigSetup.get();
 
 ReactDOM.render(
    <Auth0Provider
-      domain={process.env.REACT_APP_DOMAIN ?? ''}
-      clientId={process.env.REACT_APP_CLIENTID ?? ''}
+      domain={config.domain}
+      clientId={config.clientId}
       redirectUri={window.location.origin}
-      audience={process.env.REACT_APP_AUDIENCE}
-      scope={process.env.REACT_APP_SCOPE}
+      audience={config.audience}
+      scope={config.scope}
    >
-      {/* <Auth0Provider
-      domain={authConfig.normal.domain}
-      clientId={authConfig.normal.clientId}
-      redirectUri={window.location.origin}
-   > */}
       <App />
    </Auth0Provider>,
    document.getElementById('root')
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+// Performance Measurement
 reportWebVitals();

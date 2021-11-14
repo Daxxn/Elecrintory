@@ -291,7 +291,12 @@ class ModelObserver {
       try {
          if (accessToken) {
             if (authUser) {
-               const req = URLHelper2.buildDataRequest('user', 'POST', authUser);
+               const req = URLHelper2.buildDataRequest(
+                  'user',
+                  'POST',
+                  authUser,
+                  'register'
+               );
                const apiResponse = await fetch(req.url, req.init);
 
                if (StatusCheck.quickStatusCheck(apiResponse.status)) {

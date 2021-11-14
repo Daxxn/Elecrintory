@@ -1,12 +1,14 @@
 import Cookies from 'js-cookie';
+import ConfigSetup from './ConfigSetup';
+
+const config = ConfigSetup.get();
 
 export type Endpoints = 'user' | 'parts' | 'packages';
 export type Method = 'GET' | 'POST' | 'PATCH' | 'DELETE';
 
 class URLHelper2 {
    // #region Props
-   static rootUrl: string =
-      process.env.REACT_APP_SERVER_URL ?? 'http://localhost:3131';
+   static rootUrl: string = config.serverUrl;
    // #endregion
 
    // #region Methods
