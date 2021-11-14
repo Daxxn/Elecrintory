@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusResult } from '../../Data/Utils/urlHelperOld';
+import { StatusResult } from '../../Data/Utils/StatusCheck';
 import './MessageRoll.css';
 
 export interface MessageRollProps {

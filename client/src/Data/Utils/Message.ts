@@ -1,5 +1,5 @@
 import Timer from "./timer";
-import URLHelper, { StatusResult } from './urlHelperOld';
+import StatusCheck, { StatusResult } from './StatusCheck';
 
 export type MessageCallback = (message: string | null) => void;
 export type StatusCallback = (status: StatusResult) => void;
@@ -25,7 +25,7 @@ class Message {
     * @param statusCode HTTP Status Code.
     */
    static response(message: string, statusCode: number) {
-      this.msg(message, URLHelper.statusCheck(statusCode));
+      this.msg(message, StatusCheck.statusCheck(statusCode));
    }
 
    /**

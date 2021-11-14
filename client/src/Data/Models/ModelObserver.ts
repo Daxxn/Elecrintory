@@ -205,410 +205,6 @@ class ModelObserver {
    }
    // #endregion
 
-   // #region OLD Server Call Methods
-   // #region Update Methods
-   // private static async updateUser() {
-   //    try {
-   //       Message.log('Updating User...');
-   //       const req = URLHelper.buildDataFetch(
-   //          'user',
-   //          'PATCH',
-   //          undefined,
-   //          this.user
-   //       );
-   //       const res = await fetch(req.url, req.config);
-   //       if (URLHelper.quickStatusCheck(res.status)) {
-   //          const data = (await res.json()) as UpdatedUserResponse;
-   //          Message.response('User Updated.', res.status);
-   //          this.user = data.user;
-   //          this.updateUserObservers(data.user);
-   //       } else {
-   //          const data = (await res.json()) as MessageResponse;
-   //          Message.response(data.message, res.status);
-   //       }
-   //    } catch (err) {
-   //       const error = err as Error;
-   //       if (error.message) {
-   //          Message.msg(error.message, 'error');
-   //       } else {
-   //          Message.msg('Unknown error', 'error');
-   //       }
-   //    }
-   // }
-
-   // static async updatePackage(pack: PackageModel) {
-   //    Message.log('Updating Package...');
-   //    try {
-   //       console.log(pack);
-   //       const req = URLHelper.buildDataFetch('packages', 'PATCH', '', pack);
-   //       const res = await fetch(req.url, req.config);
-   //       if (URLHelper.quickStatusCheck(res.status)) {
-   //          const data = (await res.json()) as UpdatedPackageResponse;
-   //          this.packages[data.package._id] = data.package;
-   //          Message.response('Package Updated.', res.status);
-   //          this.updatePackageObservers(data.package);
-   //       } else {
-   //          const data = (await res.json()) as MessageResponse;
-   //          Message.response(data.message, res.status);
-   //       }
-   //    } catch (err) {
-   //       const error = err as Error;
-   //       if (error.message) {
-   //          Message.msg(error.message, 'error');
-   //       } else {
-   //          Message.msg('Unknown error', 'error');
-   //       }
-   //    }
-   // }
-
-   // static async updatePart(part: PartModel) {
-   //    Message.msg('Starting part update', 'ok');
-   //    try {
-   //       const req = URLHelper.buildDataFetch('parts', 'PATCH', '', part);
-   //       const res = await fetch(req.url, req.config);
-   //       if (URLHelper.quickStatusCheck(res.status)) {
-   //          const data = (await res.json()) as UpdatedPartResponse;
-   //          this.parts[data.part._id] = data.part;
-   //          Message.response('Updated Part', res.status);
-   //          this.updatePartObservers(data.part);
-   //       } else {
-   //          const data = (await res.json()) as MessageResponse;
-   //          Message.response(data.message, res.status);
-   //       }
-   //    } catch (err) {
-   //       const error = err as Error;
-   //       if (error.message) {
-   //          Message.msg(error.message, 'error');
-   //       } else {
-   //          Message.msg('Unknown error', 'error');
-   //       }
-   //    }
-   // }
-   // #endregion
-
-   // private static async fetchUserData() {
-   //    try {
-   //       if (this.user) {
-   //          const req = URLHelper2.buildDataRequest('user', 'GET', null, '', this.user._id);
-   //          const res = await fetch(req.url, req.init);
-   //          if (StatusCheck.quickStatusCheck(res.status)) {
-   //             const data = (await res.json()) as UserDataResponse;
-   //             this.parts = data.parts;
-   //             this.packages = data.packages;
-   //             Message.msg(
-   //                'User Login and setup Complete',
-   //                URLHelper.statusCheck(res.status)
-   //             );
-   //             this.updateUserObservers(this.user);
-   //          } else {
-   //             const data = (await res.json()) as MessageResponse;
-   //             Message.msg(data.message, StatusCheck.statusCheck(res.status));
-   //          }
-   //       } else {
-   //          Message.msg('Your already logged in. how did you do that?', 'error');
-   //       }
-   //    } catch (err) {
-   //       const error = err as Error;
-   //       if (error.message) {
-   //          Message.msg(error.message, 'error');
-   //       } else {
-   //          Message.msg('Unknown error', 'error');
-   //       }
-   //    }
-   // }
-
-   // #region New Requests
-   // static async newPart(partName: string) {
-   //    if (partName && this.user) {
-   //       Message.log('Creating new part...');
-   //       const req = URLHelper.buildDataFetch('parts', 'POST', partName);
-   //       const res = await fetch(req.url, req.config);
-   //       if (URLHelper.quickStatusCheck(res.status)) {
-   //          const data = (await res.json()) as NewPartResponse;
-   //          if (data.user) {
-   //             this.user = data.user;
-   //             this.parts = data.parts;
-   //             Message.msg('Part Created successfuly.', 'ok');
-   //             this.updateUserObservers(data.user);
-   //          } else {
-   //             Message.msg('Part Creation Error.', 'error');
-   //          }
-   //       } else {
-   //          const data = (await res.json()) as MessageResponse;
-   //          Message.msg(data.message, URLHelper.statusCheck(res.status));
-   //       }
-   //    }
-   // }
-
-   // static async newPackage(pack: PackageModel) {
-   //    Message.log('Creating Package...');
-   //    try {
-   //       const req = URLHelper.buildDataFetch('packages', 'POST', '', pack);
-   //       const res = await fetch(req.url, req.config);
-   //       console.log(pack);
-   //       if (URLHelper.quickStatusCheck(res.status)) {
-   //          const data = (await res.json()) as NewPackageResponse;
-   //          if (data) {
-   //             this.user = data.user;
-   //             this.packages = data.packages;
-   //             Message.response('Package Created.', res.status);
-   //             console.log(data.user);
-   //             this.updateUserObservers(data.user);
-   //          } else {
-   //             Message.response('No Data Returned.', res.status);
-   //          }
-   //       } else {
-   //          const data = (await res.json()) as MessageResponse;
-   //          Message.response(data.message, res.status);
-   //       }
-   //    } catch (err) {
-   //       const error = err as Error;
-   //       if (error.message) {
-   //          Message.msg(error.message, 'error');
-   //       } else {
-   //          Message.msg('Unknown error', 'error');
-   //       }
-   //    }
-   // }
-   // #endregion
-
-   // #region Delete Requests
-   // static async deletePart(partId: string) {
-   //    try {
-   //       Message.log('Deleting Part');
-   //       const req = URLHelper.buildDataFetch('parts', 'DELETE', partId);
-   //       const res = await fetch(req.url, req.config);
-   //       console.log(partId);
-   //       if (URLHelper.quickStatusCheck(res.status)) {
-   //          const data = (await res.json()) as DeletedResponse;
-   //          console.log(data);
-   //          if (data) {
-   //             this.user = data.user;
-   //             delete this.parts[partId];
-   //             Message.response('Part Deleted.', res.status);
-   //             this.updateUserObservers(data.user);
-   //          } else {
-   //             Message.response('No Data Returned', res.status);
-   //          }
-   //       } else {
-   //          const data = (await res.json()) as MessageResponse;
-   //          Message.response(data.message, res.status);
-   //       }
-   //    } catch (err) {
-   //       const error = err as Error;
-   //       if (error.message) {
-   //          Message.msg(error.message, 'error');
-   //       } else {
-   //          Message.msg('Unknown error', 'error');
-   //       }
-   //    }
-   // }
-
-   // static async deletePackage(packageId: string) {
-   //    try {
-   //       Message.log('Deleting Package');
-   //       const req = URLHelper.buildDataFetch('parts', 'DELETE', packageId);
-   //       const res = await fetch(req.url, req.config);
-   //       console.log(packageId);
-   //       if (URLHelper.quickStatusCheck(res.status)) {
-   //          const data = (await res.json()) as DeletedResponse;
-   //          console.log(data);
-   //          if (data) {
-   //             this.user = data.user;
-   //             delete this.packages[packageId];
-   //             Message.response('Package Deleted.', res.status);
-   //             this.updateUserObservers(data.user);
-   //          } else {
-   //             Message.response('No Data Returned', res.status);
-   //          }
-   //       } else {
-   //          const data = (await res.json()) as MessageResponse;
-   //          Message.response(data.message, res.status);
-   //       }
-   //    } catch (err) {
-   //       const error = err as Error;
-   //       if (error.message) {
-   //          Message.msg(error.message, 'error');
-   //       } else {
-   //          Message.msg('Unknown error', 'error');
-   //       }
-   //    }
-   // }
-   // #endregion
-
-   // static async autoLogin() {
-   //    try {
-   //       // ! Keeps locking up...
-   //       // Message.log('Attempting Auto-Login...');
-   //       const userId = Cookies.get('userId');
-   //       const loggedIn = Cookies.get('loggedIn');
-   //       if (userId && loggedIn === 'true') {
-   //          const req = URLHelper.buildDataFetch('user', 'GET', userId);
-   //          const res = await fetch(req.url, req.config);
-   //          if (URLHelper.quickStatusCheck(res.status)) {
-   //             const data = (await res.json()) as LoginResponse;
-   //             if (data.user) {
-   //                Cookies.set('loggedIn', 'true');
-   //                this.user = data.user;
-   //                await this.fetchUserData();
-   //             }
-   //          } else {
-   //             const data = (await res.json()) as MessageResponse;
-   //             Message.response(data.message, res.status);
-   //          }
-   //       } else {
-   //          Message.msg('Not logged in...', 'unauth');
-   //       }
-   //    } catch (err) {
-   //       const error = err as Error;
-   //       if (error.message) {
-   //          Message.msg(error.message, 'error');
-   //       } else {
-   //          Message.msg('Unknown error', 'error');
-   //       }
-   //    }
-   // }
-
-   // #region OLD Authentication Handling
-   // static async login(creds: Creds) {
-   //    try {
-   //       var response: StatusResult = 'ok';
-   //       const req = URLHelper.buildAuthFetch('login', creds);
-   //       Message.log('Starting Login Attempt');
-   //       const res = await fetch(req.url, req.config);
-   //       if (URLHelper.quickStatusCheck(res.status)) {
-   //          const data = (await res.json()) as LoginResponse;
-   //          if (data.user) {
-   //             Cookies.set('userId', data.user._id);
-   //             Cookies.set('loggedIn', 'true');
-   //             this.user = data.user;
-   //             await this.fetchUserData();
-   //          } else {
-   //             Message.msg('Login Issue', URLHelper.statusCheck(res.status));
-   //          }
-   //       } else {
-   //          const data = (await res.json()) as MessageResponse;
-   //          Message.msg(data.message, URLHelper.statusCheck(res.status));
-   //       }
-   //       if (response === 'ok') {
-   //          return URLHelper.statusCheck(res.status);
-   //       }
-   //       return response;
-   //    } catch (err) {
-   //       const error = err as Error;
-   //       if (error.message) {
-   //          Message.msg(error.message, 'error');
-   //       } else {
-   //          Message.msg('Unknown error', 'error');
-   //       }
-   //    }
-   // }
-
-   // static async register(creds: Creds) {
-   //    if (this.user) {
-   //       Message.msg('A user is logged in. logout first!', 'error');
-   //       return;
-   //    }
-   //    try {
-   //       const req = URLHelper.buildAuthFetch('register', creds);
-   //       console.log('Starting Register Attempt');
-   //       const res = await fetch(req.url, req.config);
-   //       if (URLHelper.quickStatusCheck(res.status)) {
-   //          // TODO - Change the server response to just send a message.
-   //          //        The userId doesnt need to be sent when done.
-   //          const data = (await res.json()) as RegisterResponse;
-   //          console.log(data);
-   //          Message.response(data.message, res.status);
-   //       } else {
-   //          const data = (await res.json()) as MessageResponse;
-   //          console.log(data.message);
-   //          Message.response(data.message, res.status);
-   //       }
-   //    } catch (err) {
-   //       const error = err as Error;
-   //       if (error.message) {
-   //          Message.msg(error.message, 'error');
-   //       } else {
-   //          Message.msg('Unknown error', 'error');
-   //       }
-   //    }
-   // }
-
-   // static async unregister(confUsername: string) {
-   //    if (this.user) {
-   //       if (confUsername === this.user.username) {
-   //          try {
-   //             const req = URLHelper.buildAuthFetch('unregister');
-   //             const res = await fetch(req.url, req.config);
-   //             if (URLHelper.quickStatusCheck(res.status) && res.status === 201) {
-   //                const data = (await res.json()) as UnregisterResponse;
-   //                console.log(data);
-   //                if (data.success) {
-   //                   this.user = null;
-   //                   this.parts = {};
-   //                   this.packages = {};
-   //                   Cookies.set('loggedIn', 'false');
-   //                   Cookies.remove('userId');
-   //                   Cookies.remove('connect.sid');
-   //                   this.updateUserObservers(null);
-   //                }
-   //                Message.response(data.message, res.status);
-   //             } else {
-   //                const data = (await res.json()) as MessageResponse;
-   //                Message.response(data.message, res.status);
-   //             }
-   //          } catch (err) {
-   //             const error = err as Error;
-   //             if (error.message) {
-   //                Message.msg(error.message, 'error');
-   //             } else {
-   //                Message.msg('Unknown error', 'error');
-   //             }
-   //          }
-   //       } else {
-   //          Message.msg(
-   //             'Username did not match. Be careful. This deletes EVERYTHING!',
-   //             'error'
-   //          );
-   //       }
-   //    } else {
-   //       Message.msg('No user logged in... Unknown Error', 'error');
-   //    }
-   // }
-
-   // private static postLogout() {
-   //    console.log('In Post Logout.');
-   //    this.user = null;
-   //    this.parts = {};
-   //    Cookies.set('loggedIn', 'false');
-   //    Cookies.remove('userId');
-   //    Cookies.remove('connect.sid');
-   //    this.updateUserObservers(null);
-   // }
-
-   // static async logout() {
-   //    try {
-   //       const req = URLHelper.buildAuthFetch('logout');
-   //       console.log('Starting Logout Attempt');
-   //       const res = await fetch(req.url, req.config);
-   //       const data = (await res.json()) as MessageResponse;
-   //       // console.log(data.message);
-   //       if (URLHelper.quickStatusCheck(res.status)) {
-   //          this.postLogout();
-   //       }
-   //       Message.msg(data.message, URLHelper.statusCheck(res.status));
-   //    } catch (err) {
-   //       const error = err as Error;
-   //       if (error.message) {
-   //          Message.msg(error.message, 'error');
-   //       } else {
-   //          Message.msg('Unknown error', 'error');
-   //       }
-   //    }
-   // }
-   // #endregion
-   // #endregion
-
    // #region Auth0 Authentication Handling
    // #region User Methods
    static async fetchUser(
@@ -618,16 +214,14 @@ class ModelObserver {
       try {
          if (accessToken) {
             if (userSub) {
-               const apiResponse = await fetch(
-                  `http://localhost:3131/api/user/${userSub}`,
-                  {
-                     method: 'GET',
-                     headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${accessToken}`,
-                     },
-                  }
+               const req = URLHelper2.buildDataRequest(
+                  'user',
+                  'GET',
+                  null,
+                  '',
+                  userSub
                );
+               const apiResponse = await fetch(req.url, req.init);
 
                if (StatusCheck.quickStatusCheck(apiResponse.status)) {
                   if (apiResponse.status === 202) {
@@ -697,14 +291,8 @@ class ModelObserver {
       try {
          if (accessToken) {
             if (authUser) {
-               const apiResponse = await fetch('http://localhost:3131/api/user/', {
-                  method: 'POST',
-                  headers: {
-                     'Content-Type': 'application/json',
-                     Authorization: `Bearer ${accessToken}`,
-                  },
-                  body: JSON.stringify(authUser),
-               });
+               const req = URLHelper2.buildDataRequest('user', 'POST', authUser);
+               const apiResponse = await fetch(req.url, req.init);
 
                if (StatusCheck.quickStatusCheck(apiResponse.status)) {
                   const { user } = (await apiResponse.json()) as LoginResponse;
@@ -738,9 +326,17 @@ class ModelObserver {
          if (userSub) {
             const accessToken = Cookies.get('accessToken');
             if (accessToken) {
-               const apiRes = await fetch(
-                  `http://localhost:3131/api/user/${userSub}`
+               const req = URLHelper2.buildDataRequest(
+                  'user',
+                  'DELETE',
+                  null,
+                  '',
+                  userSub
                );
+               const apiRes = await fetch(req.url, req.init);
+               // const apiRes = await fetch(
+               //    `http://localhost:3131/api/user/${userSub}`
+               // );
 
                const { message } = (await apiRes.json()) as MessageResponse;
                Message.response(message, apiRes.status);

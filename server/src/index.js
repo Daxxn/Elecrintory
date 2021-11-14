@@ -1,22 +1,21 @@
 // #region Imports
-require('dotenv').config();
+const env = require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const debug = require('morgan');
 const cors = require('cors');
 const http = require('http');
-const session = require('express-session');
-const MongoSession = require('connect-mongo');
-const userModel = require('./models/users');
-const { messageHelper, messages } = require('./utils/messageHelper');
+// const session = require('express-session');
+// const MongoSession = require('connect-mongo');
+// const userModel = require('./models/users');
+// const { messageHelper, messages } = require('./utils/messageHelper');
 
 const authCheck = require('./utils/authMiddleware/auth0');
-const oldAuthCheck = require('./utils/authMiddleware/oldAuth');
+// const oldAuthCheck = require('./utils/authMiddleware/oldAuth');
 
 // #region Routes
 const userRoute = require('./routes/user');
-const authRoute = require('./routes/auth');
 const partsRoute = require('./routes/part');
 const packageRoute = require('./routes/package');
 // #endregion
@@ -39,8 +38,6 @@ const apiRoutes = (app, db) => {
   // Auth Init
   if (process.env.AUTH0 === 'true') {
     apiRouter.use(authCheck);
-  } else {
-    apiRouter.use(oldAuthCheck);
   }
   apiRouter.use('/user', userRoute());
   apiRouter.use('/parts', partsRoute());
@@ -53,7 +50,7 @@ const apiRoutes = (app, db) => {
 const initMiddleware = (app) => {
   app.use(
     cors({
-      origin: ['http://localhost:3000'],
+      origin: [process.env.CLIENT],
       exposedHeaders: ['Access-Control-Allow-Origin', 'Content-Type'],
       allowedHeaders: [
         'Access-Control-Allow-Origin',
@@ -62,6 +59,14 @@ const initMiddleware = (app) => {
       ],
       credentials: true,
     })
+
+    // CORS Test... IDK if this will work. It didnt...
+    // cors({
+    //   origin: (origin, callback) => {
+    //     callback(null, true);
+    //   },
+    //   preflightContinue: true,
+    // })
   );
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
@@ -86,22 +91,22 @@ const initErrorHandler = (app) => {
 // #endregion
 
 // #region Session Init
-const initSession = (app) => {
-  app.use(
-    session({
-      secret: process.env.SECRET,
-      store: MongoSession.create({
-        mongoUrl: process.env.DB_CONNECT,
-      }),
-      cookie: {
-        secure: false,
-        maxAge: 6000000,
-      },
-      resave: true,
-      saveUninitialized: true,
-    })
-  );
-};
+// const initSession = (app) => {
+//   app.use(
+//     session({
+//       secret: process.env.SECRET,
+//       store: MongoSession.create({
+//         mongoUrl: process.env.DB_CONNECT,
+//       }),
+//       cookie: {
+//         secure: false,
+//         maxAge: 6000000,
+//       },
+//       resave: true,
+//       saveUninitialized: true,
+//     })
+//   );
+// };
 // #endregion
 
 // #region Database
@@ -116,9 +121,8 @@ const databaseConnection = (app, callback) => {
 const startExpress = () => {
   const app = express();
   initMiddleware(app);
-  initSession(app);
+  // initSession(app);
   homeRoute(app);
-  app.use('/auth', authRoute());
   initErrorHandler(app);
   return app;
 };
@@ -135,7 +139,7 @@ const start = () => {
         if (err) {
           console.log(err);
         } else {
-          console.log(`Started Server : ${process.env.PORT}`);
+          console.log(`Started Server  @  ${JSON.stringify(server.address())}`);
         }
       });
     }
